@@ -1,3 +1,3 @@
 # gamma
 
-A toy game enigne.
+A toy game engine.
