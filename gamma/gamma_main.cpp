@@ -16,4 +16,4 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-int main(int arc, char** arv) { return 0; }
+int main(int argc, char** argv) { return 0; }
