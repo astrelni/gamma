@@ -18,8 +18,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-cc_binary(
-    name = "gamma",
-    srcs = ["gamma_main.cpp"],
-    deps = ["//gamma/game"],
+cc_library(
+    name = "game",
+    hdrs = ["game.hpp"],
 )

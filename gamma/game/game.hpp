@@ -16,10 +16,15 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "gamma/game/game.hpp"
+#ifndef GAMMA_GAME_GAME_HPP_
+#define GAMMA_GAME_GAME_HPP_
 
-int main(int argc, char** argv) {
-  y::Game game;
-  (void)game;
-  return 0;
-}
+namespace y {
+
+class Game {
+ public:
+ private:
+};
+
+}  // namespace y
+#endif  // GAMMA_GAME_GAME_HPP_
