@@ -50,12 +50,21 @@ cc_library(
         ],
     }),
     defines = select({
-        ":linux": [
-            "_GLFW_VULKAN_STATIC",
-            "_GLFW_X11",
-        ],
+        ":linux": ["_GLFW_X11"],
     }),
     strip_include_prefix = "include",
+    linkopts = select({
+        ":linux": [
+            "-ldl",
+            "-lX11",
+            "-lXrandr",
+            "-lXinerama",
+            "-lXcursor",
+            "-lXxf86vm",
+            "-lpthread",
+            "-lvulkan",
+        ],
+    }),
 )
 """,
 )
