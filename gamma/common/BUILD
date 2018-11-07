@@ -15,3 +15,38 @@
 # 2. Altered source versions must be plainly marked as such, and must not be
 #    misrepresented as being the original software.
 # 3. This notice may not be removed or altered from any source distribution.
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "glfw",
+    hdrs = ["glfw.hpp"],
+    deps = ["@glfw//:glfw"],
+)
+
+cc_library(
+    name = "init",
+    hdrs = ["init.hpp"],
+    srcs = ["init.cpp"],
+    deps = [":glfw"],
+)
+
+cc_library(
+    name = "log",
+    hdrs = ["log.hpp"],
+    srcs = ["log.cpp"],
+    deps = [
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/strings:str_format",
+        "@com_google_absl//absl/synchronization",
+    ],
+)
+
+cc_test(
+    name = "log_test",
+    srcs = ["log_test.cpp"],
+    deps = [
+        ":log",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
