@@ -83,6 +83,27 @@ cc_library(
 """,
 )
 
+# GLM
+http_archive(
+    name = "glm",
+    urls = ["https://github.com/g-truc/glm/archive/0.9.9.3.zip"],
+    strip_prefix = "glm-0.9.9.3",
+    build_file_content = """
+cc_library(
+    name = "glm_impl",
+    hdrs = glob(["glm/**/*.hpp"], exclude = ["glm/glm.hpp"]) + 
+        glob(["glm/**/*.h"]) + glob(["glm/**/*.inl"]),
+)
+
+cc_library(
+    name = "glm",
+    visibility = ["//visibility:public"],
+    hdrs = ["glm/glm.hpp"],
+    deps = [":glm_impl"],
+)
+""",
+)
+
 # Vulkan
 
 # LuaJIT
