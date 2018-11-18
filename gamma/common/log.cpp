@@ -47,7 +47,7 @@ LogLine::~LogLine() {
   } else {
     absl::PrintF("%s\n", line_);
   }
-  if (fatal_ == LogFatal::kTrue) std::abort();
+  if (fatal_ == LogFatal::kTrue) std::exit(EXIT_FAILURE);
 }
 
 }  // namespace y_internal
