@@ -26,6 +26,7 @@ cc_library(
         "queue.hpp",
         "state.hpp",
         "surface.hpp",
+        "swapchain.hpp",
     ],
     srcs = [
         "device.cpp",

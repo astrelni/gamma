@@ -51,6 +51,10 @@ class VulkanDevice {
 // -----------------------------------------------------------------------------
 //                      Implementation Details Follow
 
+inline VulkanDevice::~VulkanDevice() {
+  vkDestroyDevice(logical_device_, nullptr);
+}
+
 inline VkPhysicalDevice VulkanDevice::physicalHandle() const {
   return physical_device_;
 }
