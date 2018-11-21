@@ -15,3 +15,34 @@
 # 2. Altered source versions must be plainly marked as such, and must not be
 #    misrepresented as being the original software.
 # 3. This notice may not be removed or altered from any source distribution.
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "vk",
+    hdrs = [
+        "device.hpp",
+        "instance.hpp",
+        "queue.hpp",
+        "state.hpp",
+        "surface.hpp",
+    ],
+    srcs = [
+        "device.cpp",
+    ],
+    deps = [
+        "//gamma/common:glfw",
+        "//gamma/common:log",
+        "@com_google_absl//absl/algorithm:container",
+        "@com_google_absl//absl/strings",
+    ],
+)
+
+cc_test(
+    name = "instance_test",
+    srcs = ["instance_test.cpp"],
+    deps = [
+        ":vk",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
