@@ -36,6 +36,9 @@ cc_library(
     visibility = ["//visibility:public"],
     hdrs = ["include/GLFW/glfw3.h"],
     srcs = [
+        # include glfw3.h in srcs as well because bazel is having trouble with
+        # relative include paths inside glfw source.
+        "include/GLFW/glfw3.h",
         "src/context.c",
         "src/init.c",
         "src/input.c",
@@ -91,7 +94,7 @@ http_archive(
     build_file_content = """
 cc_library(
     name = "glm_impl",
-    hdrs = glob(["glm/**/*.hpp"], exclude = ["glm/glm.hpp"]) + 
+    hdrs = glob(["glm/**/*.hpp"], exclude = ["glm/glm.hpp"]) +
         glob(["glm/**/*.h"]) + glob(["glm/**/*.inl"]),
 )
 
