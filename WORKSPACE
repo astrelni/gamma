@@ -107,6 +107,39 @@ cc_library(
 """,
 )
 
+# glslang
+http_archive(
+  name = "glslang",
+  urls = ["https://github.com/KhronosGroup/glslang/archive/7.10.2984.zip"],
+  strip_prefix = "glslang-7.10.2984",
+  build_file_content = """
+config_setting(
+    name = "linux",
+    constraint_values = [
+        "@bazel_tools//platforms:linux",
+    ],
+)
+
+cc_library(
+    name = "glslang",
+    visibility = ["//visibility:public"],
+    hdrs = ["glslang/Public/ShaderLang.h"],
+    srcs =
+        glob(["glslang/Include/*.h"]) +
+        glob(["glslang/MachineIndependent/*.cpp"]) +
+        glob(["glslang/MachineIndependent/*.h"]) +
+        glob(["glslang/MachineIndependent/preprocessor/*.cpp"]) +
+        glob(["glslang/MachineIndependent/preprocessor/*.h"]) +
+        [
+            "glslang/OSDependent/osinclude.h",
+            "OGLCompilersDLL/InitializeDll.h",
+            "OGLCompilersDLL/InitializeDll.cpp",
+        ] +
+        select({":linux": ["glslang/OSDependent/Unix/ossource.cpp"]}),
+)
+""",
+)
+
 # Vulkan
 
 # LuaJIT
