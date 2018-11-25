@@ -19,6 +19,8 @@
 #ifndef GAMMA_GRAPHICS_VK_SWAPCHAIN_HPP_
 #define GAMMA_GRAPHICS_VK_SWAPCHAIN_HPP_
 
+#include <vector>
+
 #include "gamma/common/glfw.hpp"
 #include "gamma/graphics/vk/device.hpp"
 #include "gamma/graphics/vk/surface.hpp"
@@ -44,7 +46,12 @@ class VulkanSwapchain {
 // -----------------------------------------------------------------------------
 //                      Implementation Details Follow
 
-inline VulkanSwapchain::~VulkanSwapchain() {}
+inline VulkanSwapchain::~VulkanSwapchain() {
+  for (auto view : image_views_) {
+    vkDestroyImageView(logical_device_, view, nullptr);
+  }
+  vkDestroySwapchainKHR(logical_device_, swapchain_, nullptr);
+}
 
 }  // namespace y
 #endif  // GAMMA_GRAPHICS_VK_SWAPCHAIN_HPP_

@@ -22,6 +22,7 @@
 #include "gamma/graphics/vk/device.hpp"
 #include "gamma/graphics/vk/instance.hpp"
 #include "gamma/graphics/vk/surface.hpp"
+#include "gamma/graphics/vk/swapchain.hpp"
 
 namespace y {
 
@@ -33,13 +34,16 @@ class VulkanState {
   VulkanInstance instance_;
   VulkanSurface surface_;
   VulkanDevice device_;
+  VulkanSwapchain swapchain_;
 };
 
 // -----------------------------------------------------------------------------
 //                      Implementation Details Follow
 
 inline VulkanState::VulkanState(GLFWwindow* window)
-    : surface_(instance_, window), device_(instance_, surface_) {}
+    : surface_(instance_, window),
+      device_(instance_, surface_),
+      swapchain_(device_, surface_, window) {}
 
 }  // namespace y
 #endif  // GAMMA_GRAPHICS_VK_STATE_HPP_

@@ -30,6 +30,7 @@ cc_library(
     ],
     srcs = [
         "device.cpp",
+        "swapchain.cpp",
     ],
     deps = [
         "//gamma/common:glfw",
