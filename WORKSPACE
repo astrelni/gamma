@@ -132,10 +132,43 @@ cc_library(
         glob(["glslang/MachineIndependent/preprocessor/*.h"]) +
         [
             "glslang/OSDependent/osinclude.h",
+            "glslang/GenericCodeGen/CodeGen.cpp",
+            "glslang/GenericCodeGen/Link.cpp",
             "OGLCompilersDLL/InitializeDll.h",
             "OGLCompilersDLL/InitializeDll.cpp",
         ] +
         select({":linux": ["glslang/OSDependent/Unix/ossource.cpp"]}),
+)
+
+cc_library(
+    name = "spirv",
+    visibility = ["//visibility:public"],
+    hdrs = [
+        "SPIRV/bitutils.h",
+        "SPIRV/spirv.hpp",
+        "SPIRV/GLSL.std.450.h",
+        "SPIRV/GLSL.ext.EXT.h",
+        "SPIRV/GLSL.ext.KHR.h",
+        "SPIRV/GlslangToSpv.h",
+        "SPIRV/hex_float.h",
+        "SPIRV/Logger.h",
+        "SPIRV/SpvBuilder.h",
+        "SPIRV/spvIR.h",
+        "SPIRV/doc.h",
+        "SPIRV/SpvTools.h",
+        "SPIRV/disassemble.h",
+    ],
+    srcs = [
+        "SPIRV/GlslangToSpv.cpp",
+        "SPIRV/InReadableOrder.cpp",
+        "SPIRV/Logger.cpp",
+        "SPIRV/SpvBuilder.cpp",
+        "SPIRV/SpvPostProcess.cpp",
+        "SPIRV/doc.cpp",
+        "SPIRV/SpvTools.cpp",
+        "SPIRV/disassemble.cpp",
+    ],
+    deps = [":glslang"],
 )
 """,
 )
