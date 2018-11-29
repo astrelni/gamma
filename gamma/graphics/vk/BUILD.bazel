@@ -23,6 +23,7 @@ cc_library(
     hdrs = [
         "device.hpp",
         "instance.hpp",
+        "glsl.hpp",
         "queue.hpp",
         "state.hpp",
         "surface.hpp",
@@ -30,6 +31,7 @@ cc_library(
     ],
     srcs = [
         "device.cpp",
+        "glsl.cpp",
         "swapchain.cpp",
     ],
     deps = [
@@ -37,6 +39,8 @@ cc_library(
         "//gamma/common:log",
         "@com_google_absl//absl/algorithm:container",
         "@com_google_absl//absl/strings",
+        "@glslang//:glslang",
+        "@glslang//:spirv",
     ],
 )
 
