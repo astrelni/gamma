@@ -135,7 +135,8 @@ TBuiltInResource DefaultResource() {
 
 }  // namespace
 
-std::vector<uint32_t> CompileGLSL(EShLanguage stage, absl::string_view source) {
+std::vector<uint32_t> TranslateGLSL(EShLanguage stage,
+                                    absl::string_view source) {
   static const TBuiltInResource resource = DefaultResource();
 
   glslang::TShader shader(stage);
