@@ -24,7 +24,9 @@ cc_library(
         "device.hpp",
         "instance.hpp",
         "glsl.hpp",
+        "pipeline.hpp",
         "queue.hpp",
+        "shader_module.hpp",
         "state.hpp",
         "surface.hpp",
         "swapchain.hpp",
@@ -32,6 +34,8 @@ cc_library(
     srcs = [
         "device.cpp",
         "glsl.cpp",
+        "pipeline.cpp",
+        "shader_module.cpp",
         "swapchain.cpp",
     ],
     deps = [
