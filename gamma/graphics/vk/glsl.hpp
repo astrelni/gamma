@@ -24,7 +24,7 @@
 
 namespace y {
 
-// Translates GLSL version 450 `source` of a given shader shader into Spir-V.
+// Translates GLSL version 450 `source` of a given shader stage into Spir-V.
 std::vector<uint32_t> TranslateGLSL(EShLanguage stage,
                                     absl::string_view source);
 
