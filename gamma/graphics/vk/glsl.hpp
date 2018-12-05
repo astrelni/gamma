@@ -17,15 +17,21 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 #include <cstdint>
+#include <string>
 #include <vector>
 
 #include "absl/strings/string_view.h"
+#include "gamma/graphics/vk/device.hpp"
+#include "gamma/graphics/vk/shader_module.hpp"
 #include "glslang/Public/ShaderLang.h"
 
 namespace y {
 
-// Translates GLSL version 450 `source` of a given shader stage into Spir-V.
-std::vector<uint32_t> TranslateGLSL(EShLanguage stage,
-                                    absl::string_view source);
+VulkanShaderModule MakeVulkanShaderFromGLSLSource(const VulkanDevice& device,
+                                                  EShLanguage stage,
+                                                  absl::string_view source);
+
+VulkanShaderModule MakeVulkanShaderFromGLSLFile(const VulkanDevice& device,
+                                                const std::string& path);
 
 }  // namespace y

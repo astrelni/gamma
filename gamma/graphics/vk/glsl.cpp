@@ -18,7 +18,12 @@
 
 #include "gamma/graphics/vk/glsl.hpp"
 
+#include <stdio.h>
+
 #include "SPIRV/GlslangToSpv.h"
+#include "absl/container/fixed_array.h"
+#include "absl/memory/memory.h"
+#include "absl/strings/match.h"
 #include "gamma/common/log.hpp"
 #include "glslang/Include/ResourceLimits.h"
 
@@ -133,10 +138,8 @@ TBuiltInResource DefaultResource() {
           }};
 }
 
-}  // namespace
-
-std::vector<uint32_t> TranslateGLSL(EShLanguage stage,
-                                    absl::string_view source) {
+std::vector<uint32_t> TranslateGLSLToSPIRV(EShLanguage stage,
+                                           absl::string_view source) {
   static const TBuiltInResource resource = DefaultResource();
 
   glslang::TShader shader(stage);
@@ -152,6 +155,53 @@ std::vector<uint32_t> TranslateGLSL(EShLanguage stage,
   std::vector<uint32_t> spirv;
   glslang::GlslangToSpv(*shader.getIntermediate(), spirv);
   return spirv;
+}
+
+absl::FixedArray<char> ReadFile(const std::string& path) {
+  FILE* file = fopen(path.c_str(), "r");
+  YERR_IF(file == nullptr) << "failed to open '" << path << "'";
+
+  size_t nchars = 0;
+  while (fgetc(file) != EOF) ++nchars;
+
+  fseek(file, 0, SEEK_SET);
+
+  absl::FixedArray<char> buffer(nchars + 1);
+  YERR_IF(fread(buffer.data(), sizeof(char), nchars, file) != nchars);
+  fclose(file);
+
+  buffer[nchars] = '\0';
+  return buffer;
+}
+
+EShLanguage GetShaderStageFromFilePath(absl::string_view path) {
+  if (absl::EndsWith(path, ".vert")) return EShLangVertex;
+  if (absl::EndsWith(path, ".frag")) return EShLangFragment;
+  if (absl::EndsWith(path, ".tesc")) return EShLangTessControl;
+  if (absl::EndsWith(path, ".tese")) return EShLangTessEvaluation;
+  if (absl::EndsWith(path, ".geom")) return EShLangGeometry;
+  if (!absl::EndsWith(path, ".comp")) {
+    YERR << "unsupported glsl file '" << path
+         << "'; must end in one of {.vert, .frag, .tesc, .tese, .geom, .comp}";
+  }
+  return EShLangCompute;
+}
+
+}  // namespace
+
+VulkanShaderModule MakeVulkanShaderFromGLSLSource(const VulkanDevice& device,
+                                                  EShLanguage stage,
+                                                  absl::string_view source) {
+  std::vector<uint32_t> byte_code = TranslateGLSLToSPIRV(stage, source);
+  return VulkanShaderModule(device, stage, byte_code);
+}
+
+VulkanShaderModule MakeVulkanShaderFromGLSLFile(const VulkanDevice& device,
+                                                const std::string& path) {
+  absl::FixedArray<char> file_data = ReadFile(path);
+  EShLanguage stage = GetShaderStageFromFilePath(path);
+  return MakeVulkanShaderFromGLSLSource(
+      device, stage, absl::string_view(file_data.data(), file_data.size()));
 }
 
 }  // namespace y

@@ -23,6 +23,7 @@
 #include <vector>
 
 #include "gamma/graphics/vk/device.hpp"
+#include "glslang/Public/ShaderLang.h"
 
 namespace y {
 
@@ -35,35 +36,38 @@ class VulkanShaderModule {
   VulkanShaderModule& operator=(VulkanShaderModule&& x) noexcept;
   ~VulkanShaderModule();
 
-  VulkanShaderModule(const VulkanDevice& device,
+  VulkanShaderModule(const VulkanDevice& device, EShLanguage shader_stage,
                      const std::vector<uint32_t>& spv_byte_code);
 
   explicit operator bool() const;
-  VkShaderModule handle() const;
+
+  VkPipelineShaderStageCreateInfo makeCreateInfo() const;
 
  private:
   void Reset();
 
   VkDevice device_ = VK_NULL_HANDLE;
   VkShaderModule module_ = VK_NULL_HANDLE;
+  VkShaderStageFlagBits stage_;
 };
 
 // -----------------------------------------------------------------------------
 //                      Implementation Details Follow
 
-VulkanShaderModule::VulkanShaderModule(VulkanShaderModule&& x) noexcept
-    : device_(x.device_), module_(x.module_) {
+inline VulkanShaderModule::VulkanShaderModule(VulkanShaderModule&& x) noexcept
+    : device_(x.device_), module_(x.module_), stage_(x.stage_) {
   x.device_ = VK_NULL_HANDLE;
   x.module_ = VK_NULL_HANDLE;
 }
 
-VulkanShaderModule& VulkanShaderModule::operator=(
+inline VulkanShaderModule& VulkanShaderModule::operator=(
     VulkanShaderModule&& x) noexcept {
   Reset();
   device_ = x.device_;
   module_ = x.module_;
   x.device_ = VK_NULL_HANDLE;
   x.module_ = VK_NULL_HANDLE;
+  stage_ = x.stage_;
   return *this;
 }
 
@@ -72,8 +76,6 @@ inline VulkanShaderModule::~VulkanShaderModule() { Reset(); }
 inline VulkanShaderModule::operator bool() const {
   return module_ != VK_NULL_HANDLE;
 }
-
-inline VkShaderModule VulkanShaderModule::handle() const { return module_; }
 
 inline void VulkanShaderModule::Reset() {
   if (*this) vkDestroyShaderModule(device_, module_, nullptr);
