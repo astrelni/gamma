@@ -44,7 +44,7 @@ class VulkanShaderModule {
   VkPipelineShaderStageCreateInfo makeCreateInfo() const;
 
  private:
-  void Reset();
+  void Destroy();
 
   VkDevice device_ = VK_NULL_HANDLE;
   VkShaderModule module_ = VK_NULL_HANDLE;
@@ -62,7 +62,7 @@ inline VulkanShaderModule::VulkanShaderModule(VulkanShaderModule&& x) noexcept
 
 inline VulkanShaderModule& VulkanShaderModule::operator=(
     VulkanShaderModule&& x) noexcept {
-  Reset();
+  Destroy();
   device_ = x.device_;
   module_ = x.module_;
   x.device_ = VK_NULL_HANDLE;
@@ -71,13 +71,13 @@ inline VulkanShaderModule& VulkanShaderModule::operator=(
   return *this;
 }
 
-inline VulkanShaderModule::~VulkanShaderModule() { Reset(); }
+inline VulkanShaderModule::~VulkanShaderModule() { Destroy(); }
 
 inline VulkanShaderModule::operator bool() const {
   return module_ != VK_NULL_HANDLE;
 }
 
-inline void VulkanShaderModule::Reset() {
+inline void VulkanShaderModule::Destroy() {
   if (*this) vkDestroyShaderModule(device_, module_, nullptr);
 }
 
