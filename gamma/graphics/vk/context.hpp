@@ -16,8 +16,8 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef GAMMA_GRAPHICS_VK_STATE_HPP_
-#define GAMMA_GRAPHICS_VK_STATE_HPP_
+#ifndef GAMMA_GRAPHICS_VK_CONTEXT_HPP_
+#define GAMMA_GRAPHICS_VK_CONTEXT_HPP_
 
 #include "gamma/graphics/vk/device.hpp"
 #include "gamma/graphics/vk/instance.hpp"
@@ -26,9 +26,9 @@
 
 namespace y {
 
-class VulkanState {
+class VulkanContext {
  public:
-  explicit VulkanState(GLFWwindow* window);
+  explicit VulkanContext(GLFWwindow* window);
 
  private:
   VulkanInstance instance_;
@@ -40,10 +40,10 @@ class VulkanState {
 // -----------------------------------------------------------------------------
 //                      Implementation Details Follow
 
-inline VulkanState::VulkanState(GLFWwindow* window)
+inline VulkanContext::VulkanContext(GLFWwindow* window)
     : surface_(instance_, window),
       device_(instance_, surface_),
       swapchain_(device_, surface_, window) {}
 
 }  // namespace y
-#endif  // GAMMA_GRAPHICS_VK_STATE_HPP_
+#endif  // GAMMA_GRAPHICS_VK_CONTEXT_HPP_

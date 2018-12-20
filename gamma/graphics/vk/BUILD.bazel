@@ -21,13 +21,13 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "vk",
     hdrs = [
+        "context.hpp",
         "device.hpp",
         "instance.hpp",
         "glsl.hpp",
         "pipeline.hpp",
         "queue.hpp",
         "shader_module.hpp",
-        "state.hpp",
         "surface.hpp",
         "swapchain.hpp",
     ],
