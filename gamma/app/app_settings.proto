@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "gamma/app/window_settings.proto";
+
+package y;
+
+message AppSettings {
+  WindowSettings window_settings = 1;
+}
