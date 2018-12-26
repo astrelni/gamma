@@ -21,14 +21,10 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "glfw",
     hdrs = ["glfw.hpp"],
-    deps = ["@glfw//:glfw"],
-)
-
-cc_library(
-    name = "init",
-    hdrs = ["init.hpp"],
-    srcs = ["init.cpp"],
-    deps = [":glfw"],
+    deps = [
+        ":log",
+        "@glfw//:glfw",
+    ],
 )
 
 cc_library(

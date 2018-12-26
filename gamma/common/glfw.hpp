@@ -16,5 +16,25 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+#ifndef GAMMA_COMMON_GLFW_HPP_
+#define GAMMA_COMMON_GLFW_HPP_
+
+#include "gamma/common/log.hpp"
 #define GLFW_INCLUDE_VULKAN
 #include "GLFW/glfw3.h"
+
+namespace y {
+
+struct GlfwState {
+  GlfwState() { YERR_IF(glfwInit() != GLFW_TRUE); }
+  ~GlfwState() { glfwTerminate(); }
+};
+
+struct GlfwWindowReleaser {
+  void operator()(GLFWwindow* w) {
+    if (w != nullptr) glfwDestroyWindow(w);
+  }
+};
+
+}  // namespace y
+#endif  // GAMMA_COMMON_GLFW_HPP_
