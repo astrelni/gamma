@@ -18,6 +18,13 @@ http_archive(
     strip_prefix = "abseil-cpp-7990fd459e9339467814ddb95000c87cb1e4d945",
 )
 
+# Protobuf
+http_archive(
+    name = "com_google_protobuf",
+    urls = ["https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-cpp-3.6.1.zip"],
+    strip_prefix = "protobuf-3.6.1",
+)
+
 # GLFW
 http_archive(
     name = "glfw",
