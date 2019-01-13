@@ -26,15 +26,12 @@
 namespace y {
 
 // A non-allocating, move-only, type-erasing functor for storing and calling a
-// small "FunctionObject". The key reason for its existence is it can accept
-// move-only types.
+// small non-const "FunctionObject". The key reason for its existence is it can
+// accept move-only types. The stored object can have a max size of
+// 2 * sizeof(void*) and max alignment requirement of alignof(void*).
 //
-//   * Stored object max size of 2 * sizeof(void*) and max alignment of
-//     alignof(void*).
-//   * As with `std::function`, doesn't bother to do const propagation
-//     correctly (may fix this in the future).
-//   * Does not work with a pointer to member function.
-//
+// As with the rest of the library, this type does *not* try to work with
+// exceptions.
 template <typename>
 class Function;
 
@@ -81,8 +78,18 @@ class Function<R(Args...)> {
   Function(R (&f)(Args...)) : Function(&f) {}
   Function& operator=(R (&f)(Args...)) { return operator=(&f); }
 
-  R operator()(Args... args) const {
-    return static_cast<R>(call_(bytes_, std::move<Args&&>(args)...));
+  Function(nullptr_t) : Function() {}
+  Function& operator=(nullptr_t) {
+    clear();
+    return *this;
+  }
+
+  explicit operator bool() const noexcept {
+    return move_or_destroy_ != nullptr;
+  }
+
+  R operator()(Args&&... args) {
+    return call_(bytes_, std::forward<Args>(args)...);
   }
 
   void clear() {
@@ -116,14 +123,13 @@ class Function<R(Args...)> {
       }
     };
 
-    call_ = [](const void* bytes, Args&&... args) -> R {
-      return static_cast<R>(
-          (*static_cast<const Type*>(bytes))(std::forward<Args>(args)...));
+    call_ = [](void* bytes, Args&&... args) -> R {
+      return (*static_cast<Type*>(bytes))(std::forward<Args>(args)...);
     };
   }
 
   using MoveOrDestroyFn = void (*)(void*, void*);
-  using CallFn = R (*)(const void*, Args...);
+  using CallFn = R (*)(void*, Args&&...);
 
   alignas(MaxTypeAlignment()) unsigned char bytes_[MaxTypeSize()];
   MoveOrDestroyFn move_or_destroy_ = nullptr;
