@@ -24,7 +24,7 @@
 #include "absl/synchronization/mutex.h"
 
 static y::LogSink* log_sink = nullptr;
-static absl::Mutex sink_mutex;
+static ABSL_CONST_INIT absl::Mutex sink_mutex(absl::kConstInit);
 
 void y::SetLogSink(LogSink* sink) {
   absl::MutexLock lock(&sink_mutex);

@@ -14,8 +14,8 @@ http_archive(
 # Abseil
 http_archive(
     name = "com_google_absl",
-    urls = ["https://github.com/abseil/abseil-cpp/archive/7990fd459e9339467814ddb95000c87cb1e4d945.zip"],
-    strip_prefix = "abseil-cpp-7990fd459e9339467814ddb95000c87cb1e4d945",
+    urls = ["https://github.com/abseil/abseil-cpp/archive/66f9becbb98ecc083f4db349b4b1e0ca9de93b15.zip"],
+    strip_prefix = "abseil-cpp-66f9becbb98ecc083f4db349b4b1e0ca9de93b15",
 )
 
 # Protobuf
