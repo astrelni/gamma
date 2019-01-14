@@ -60,3 +60,24 @@ cc_test(
         "@com_google_googletest//:gtest_main",
     ],
 )
+
+cc_library(
+    name = "function_queue",
+    hdrs = ["function_queue.hpp"],
+    srcs = ["function_queue.cpp"],
+    deps = [
+        ":function",
+        "@com_google_absl//absl/algorithm:container",
+        "@com_google_absl//absl/synchronization",
+        "@com_google_absl//absl/time",
+    ],
+)
+
+cc_test(
+    name = "function_queue_test",
+    srcs = ["function_queue_test.cpp"],
+    deps = [
+        ":function_queue",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
