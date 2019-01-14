@@ -43,16 +43,22 @@ class Function<R(Args...)> {
 
   Function() = default;
   Function(Function&& other) noexcept
-      : move_or_destroy_(other.move_or_destroy_), call_(other.call_) {
-    if (move_or_destroy_ != nullptr) move_or_destroy_(&other.bytes_, &bytes_);
+      : destructive_move_(other.destructive_move_), call_(other.call_) {
+    if (destructive_move_ != nullptr) {
+      destructive_move_(&other.bytes_, &bytes_);
+      other.destructive_move_ = nullptr;
+      other.call_ = nullptr;
+    }
   }
 
   Function& operator=(Function&& other) noexcept {
     clear();
-    if (other.move_or_destroy_ != nullptr) {
-      move_or_destroy_ = other.move_or_destroy_;
+    if (other.destructive_move_ != nullptr) {
+      destructive_move_ = other.destructive_move_;
       call_ = other.call_;
-      move_or_destroy_(&other.bytes_, &bytes_);
+      destructive_move_(&other.bytes_, &bytes_);
+      other.destructive_move_ = nullptr;
+      other.call_ = nullptr;
     }
     return *this;
   }
@@ -85,7 +91,7 @@ class Function<R(Args...)> {
   }
 
   explicit operator bool() const noexcept {
-    return move_or_destroy_ != nullptr;
+    return destructive_move_ != nullptr;
   }
 
   R operator()(Args&&... args) {
@@ -93,9 +99,9 @@ class Function<R(Args...)> {
   }
 
   void clear() {
-    if (move_or_destroy_ != nullptr) {
-      move_or_destroy_(nullptr, bytes_);
-      move_or_destroy_ = nullptr;
+    if (destructive_move_ != nullptr) {
+      destructive_move_(bytes_, nullptr);
+      destructive_move_ = nullptr;
       call_ = nullptr;
     }
   }
@@ -112,15 +118,11 @@ class Function<R(Args...)> {
 
     ::new (bytes_) Type(std::forward<F>(f));
 
-    move_or_destroy_ = [](void* from, void* to) {
-      if (from == nullptr) {
-        // This signifies that `to` stores an object of `Type` to destroy.
-        static_cast<Type*>(to)->~Type();
-      } else {
-        // This signifies that `to` is uninitialized memory and `from` holds an
-        // object of `Type` to move construct into said memory.
+    destructive_move_ = [](void* from, void* to) {
+      if (to != nullptr) {
         ::new (to) Type(std::move(*static_cast<Type*>(from)));
       }
+      static_cast<Type*>(from)->~Type();
     };
 
     call_ = [](void* bytes, Args&&... args) -> R {
@@ -128,11 +130,11 @@ class Function<R(Args...)> {
     };
   }
 
-  using MoveOrDestroyFn = void (*)(void*, void*);
+  using DestructiveMoveFn = void (*)(void*, void*);
   using CallFn = R (*)(void*, Args&&...);
 
   alignas(MaxTypeAlignment()) unsigned char bytes_[MaxTypeSize()];
-  MoveOrDestroyFn move_or_destroy_ = nullptr;
+  DestructiveMoveFn destructive_move_ = nullptr;
   CallFn call_ = nullptr;
 };
 
