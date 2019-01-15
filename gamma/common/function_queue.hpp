@@ -29,8 +29,8 @@ namespace y {
 
 class FunctionQueue {
  public:
-  void runAfter(absl::Duration delay, Function<void()> f);
-  void runEvery(absl::Duration interval, Function<void()> f);
+  void callAfter(absl::Duration delay, Function<void()> f);
+  void callEvery(absl::Duration interval, Function<void()> f);
 
   void update(absl::Duration dt);
 
@@ -50,7 +50,7 @@ class FunctionQueue {
   absl::Mutex staging_mutex_;
   std::vector<Value> staging_buffer_;
 
-  std::vector<Function<void()>> run_every_update_;
+  std::vector<Function<void()>> call_every_update_;
   std::vector<Value> queue_;
 };
 
