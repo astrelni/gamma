@@ -22,7 +22,6 @@
 #include <vector>
 
 #include "absl/synchronization/mutex.h"
-#include "absl/time/clock.h"
 #include "absl/time/time.h"
 #include "gamma/common/function.hpp"
 
@@ -46,7 +45,7 @@ class FunctionQueue {
 
   void consumeStagingBuffer();
 
-  absl::Time now_ = absl::Now();
+  absl::Time now_ = absl::UnixEpoch();
 
   absl::Mutex staging_mutex_;
   std::vector<Value> staging_buffer_;
