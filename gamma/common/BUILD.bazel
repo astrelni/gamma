@@ -81,3 +81,18 @@ cc_test(
         "@com_google_googletest//:gtest_main",
     ],
 )
+
+cc_library(
+    name = "watch",
+    hdrs = ["watch.hpp"],
+    deps = ["@com_google_absl//absl/time"],
+)
+
+cc_test(
+    name = "watch_test",
+    srcs = ["watch_test.cpp"],
+    deps = [
+        ":watch",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
