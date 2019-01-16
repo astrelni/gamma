@@ -27,9 +27,31 @@
 
 namespace y {
 
+// A type for executing a collection of callbacks with specified timeouts.
+//
+// Execution of callbacks is triggered by updating the `FunctionQueue` with
+// timestep increments. In other words, real-world time does not apply. This
+// allows the calling of functions to be paused, slowed down, or sped up.
+//
+// A particular callback function is executed at most once per call to
+// `update()`, preventing a case of never returning.
+//
+// `callAfter()` and `callEvery()` are thread-safe, while `update()` must only
+// be called from one thread. It is valid for a callback function to call
+// `callAfter()` or `callEvery()` on the `FunctionQueue` object that stores it.
 class FunctionQueue {
  public:
+  // Register `f` to be called after at least `delay` time has passed as seen by
+  // `update()`.
   void callAfter(absl::Duration delay, Function<void()> f);
+
+  // Register `f` to be called repeatedly after at least `interval` time has
+  // passed as seen by `update()`.
+  //
+  // Note: subsequent timeouts are calculated using the time when a function
+  // should have been called, and not when it actually ended up being called. In
+  // otherwords, after a cumulative `update()` time of `n * interval`, the
+  // function will have been called `n` times.
   void callEvery(absl::Duration interval, Function<void()> f);
 
   void update(absl::Duration dt);
@@ -37,7 +59,7 @@ class FunctionQueue {
  private:
   struct Value {
     absl::Time when;
-    y::Function<void()> function;
+    Function<void()> function;
     absl::Duration repeat;
   };
 
