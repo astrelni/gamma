@@ -93,6 +93,7 @@ cc_test(
     srcs = ["watch_test.cpp"],
     deps = [
         ":watch",
+        "@com_google_absl//absl/time",
         "@com_google_googletest//:gtest_main",
     ],
 )
