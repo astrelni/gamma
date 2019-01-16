@@ -18,8 +18,51 @@
 
 #include "gtest/gtest.h"
 
+#include "absl/time/clock.h"
 #include "gamma/common/watch.hpp"
 
 namespace y {
-namespace {}
+namespace {
+
+TEST(WatchTest, ConstructAndLap) {
+  using Clock = std::chrono::steady_clock;
+
+  for (int i = 1; i < 20; ++i) {
+    Clock::time_point before_start = Clock::now();
+    Watch watch;
+    Clock::time_point after_start = Clock::now();
+
+    absl::SleepFor(absl::Milliseconds(i));
+
+    Clock::time_point before_stop = Clock::now();
+    absl::Duration dt = watch.lap();
+    Clock::time_point after_stop = Clock::now();
+
+    EXPECT_LE(absl::FromChrono(before_stop - after_start), dt);
+    EXPECT_GE(absl::FromChrono(after_stop - before_start), dt);
+  }
+}
+
+TEST(WatchTest, RepeatedLap) {
+  using Clock = std::chrono::steady_clock;
+
+  Clock::time_point before_start = Clock::now();
+  Watch watch;
+  Clock::time_point after_start = Clock::now();
+  for (int i = 1; i < 20; ++i) {
+    absl::SleepFor(absl::Milliseconds(i));
+
+    Clock::time_point before_stop = Clock::now();
+    absl::Duration dt = watch.lap();
+    Clock::time_point after_stop = Clock::now();
+
+    EXPECT_LE(absl::FromChrono(before_stop - after_start), dt);
+    EXPECT_GE(absl::FromChrono(after_stop - before_start), dt);
+
+    before_start = before_stop;
+    after_start = after_stop;
+  }
+}
+
+}  // namespace
 }  // namespace y

@@ -33,8 +33,7 @@ class Watch {
   // called on an object, it returns the time elapsed since construction.
   absl::Duration lap() {
     Clock::time_point now = Clock::now();
-    absl::Duration dt = absl::FromChrono(
-        std::chrono::duration_cast<std::chrono::microseconds>(now - last_));
+    absl::Duration dt = absl::FromChrono(now - last_);
     last_ = now;
     return dt;
   }
