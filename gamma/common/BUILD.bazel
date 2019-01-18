@@ -67,6 +67,7 @@ cc_library(
     srcs = ["function_queue.cpp"],
     deps = [
         ":function",
+        ":log",
         "@com_google_absl//absl/algorithm:container",
         "@com_google_absl//absl/synchronization",
         "@com_google_absl//absl/time",

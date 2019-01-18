@@ -18,9 +18,8 @@
 
 #include "gamma/common/function_queue.hpp"
 
-#include <algorithm>
-
 #include "absl/algorithm/container.h"
+#include "gamma/common/log.hpp"
 
 namespace y {
 
@@ -29,21 +28,25 @@ struct FunctionQueue::ValueComparator {
 };
 
 void FunctionQueue::callAfter(absl::Duration delay, Function<void()> f) {
+  YERR_IF(delay < absl::ZeroDuration());
   absl::MutexLock lock(&staging_mutex_);
-  using std::max;
-  staging_buffer_.push_back(Value({now_ + max(delay, absl::ZeroDuration()),
-                                   std::move(f), absl::InfiniteDuration()}));
+  staging_buffer_.push_back(
+      Value({staging_time_ + delay, std::move(f), absl::InfiniteDuration()}));
 }
 
 void FunctionQueue::callEvery(absl::Duration interval, Function<void()> f) {
+  YERR_IF(interval < absl::ZeroDuration());
   absl::MutexLock lock(&staging_mutex_);
-  using std::max;
-  staging_buffer_.push_back(Value(
-      {now_ + max(interval, absl::ZeroDuration()), std::move(f), interval}));
+  staging_buffer_.push_back(
+      Value({staging_time_ + interval, std::move(f), interval}));
 }
 
-void FunctionQueue::consumeStagingBuffer() {
+void FunctionQueue::consumeStaging(absl::Duration dt) {
   absl::MutexLock lock(&staging_mutex_);
+
+  staging_time_ += dt;
+  update_time_ = staging_time_;
+
   for (Value& value : staging_buffer_) {
     if (value.repeat == absl::ZeroDuration()) {
       call_every_update_.push_back(std::move(value.function));
@@ -58,12 +61,11 @@ void FunctionQueue::consumeStagingBuffer() {
 void FunctionQueue::update(absl::Duration dt) {
   if (dt <= absl::ZeroDuration()) return;
 
-  consumeStagingBuffer();
+  consumeStaging(dt);
 
   for (Function<void()>& f : call_every_update_) f();
 
-  now_ += dt;
-  while (!queue_.empty() && queue_.front().when < now_) {
+  while (!queue_.empty() && queue_.front().when < update_time_) {
     absl::c_pop_heap(queue_, ValueComparator());
     Value& value = queue_.back();
     value.function();

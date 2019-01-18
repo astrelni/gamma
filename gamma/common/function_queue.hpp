@@ -33,20 +33,25 @@ namespace y {
 // timestep increments. In other words, real-world time does not apply. This
 // allows the calling of functions to be paused, slowed down, or sped up.
 //
-// A particular callback function is executed at most once per call to
-// `update()`, preventing a case of never returning.
-//
 // `callAfter()` and `callEvery()` are thread-safe, while `update()` must only
 // be called from one thread. It is valid for a callback function to call
 // `callAfter()` or `callEvery()` on the `FunctionQueue` object that stores it.
 class FunctionQueue {
  public:
   // Register `f` to be called after at least `delay` time has passed as seen by
-  // `update()`.
+  // `update()`. `delay` must be non-negative.
+  //
+  // A `delay` of zero causes the function to be called on the next call to
+  // `update()` with a positive `dt`.
   void callAfter(absl::Duration delay, Function<void()> f);
 
   // Register `f` to be called repeatedly after at least `interval` time has
-  // passed as seen by `update()`.
+  // passed as seen by `update()`. `interval` must be non-negative.
+  //
+  // A zero `interval` is a special case that causes a function to be
+  // called exactly once per call to `update()` with a positive `dt`. A positive
+  // `interval` can cause the function to be called multiple times if the call
+  // to `update()` is made with a `dt` larger than `interval`.
   //
   // Note: subsequent timeouts are calculated using the time when a function
   // should have been called, and not when it actually ended up being called. In
@@ -65,13 +70,13 @@ class FunctionQueue {
 
   struct ValueComparator;
 
-  void consumeStagingBuffer();
-
-  absl::Time now_ = absl::UnixEpoch();
+  void consumeStaging(absl::Duration dt);
 
   absl::Mutex staging_mutex_;
+  absl::Time staging_time_ = absl::UnixEpoch();
   std::vector<Value> staging_buffer_;
 
+  absl::Time update_time_;
   std::vector<Function<void()>> call_every_update_;
   std::vector<Value> queue_;
 };
