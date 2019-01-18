@@ -33,9 +33,9 @@ namespace y {
 // timestep increments. In other words, real-world time does not apply. This
 // allows the calling of functions to be paused, slowed down, or sped up.
 //
-// `callAfter()` and `callEvery()` are thread-safe, while `update()` must only
-// be called from one thread. It is valid for a callback function to call
-// `callAfter()` or `callEvery()` on the `FunctionQueue` object that stores it.
+// This type is thread-safe. It is valid for a callback function to call
+// `callAfter()` or `callEvery()`, but not `update()`, on the `FunctionQueue`
+// object that stores it.
 class FunctionQueue {
  public:
   // Register `f` to be called after at least `delay` time has passed as seen by
@@ -76,9 +76,10 @@ class FunctionQueue {
   absl::Time staging_time_ = absl::UnixEpoch();
   std::vector<Value> staging_buffer_;
 
+  absl::Mutex update_mutex_;
   absl::Time update_time_;
   std::vector<Function<void()>> call_every_update_;
-  std::vector<Value> queue_;
+  std::vector<Value> update_queue_;
 };
 
 }  // namespace y

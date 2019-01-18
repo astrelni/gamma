@@ -51,8 +51,8 @@ void FunctionQueue::consumeStaging(absl::Duration dt) {
     if (value.repeat == absl::ZeroDuration()) {
       call_every_update_.push_back(std::move(value.function));
     } else {
-      queue_.push_back(std::move(value));
-      absl::c_push_heap(queue_, ValueComparator());
+      update_queue_.push_back(std::move(value));
+      absl::c_push_heap(update_queue_, ValueComparator());
     }
   }
   staging_buffer_.clear();
@@ -61,19 +61,21 @@ void FunctionQueue::consumeStaging(absl::Duration dt) {
 void FunctionQueue::update(absl::Duration dt) {
   if (dt <= absl::ZeroDuration()) return;
 
+  absl::MutexLock lock(&update_mutex_);
+
   consumeStaging(dt);
 
   for (Function<void()>& f : call_every_update_) f();
 
-  while (!queue_.empty() && queue_.front().when < update_time_) {
-    absl::c_pop_heap(queue_, ValueComparator());
-    Value& value = queue_.back();
+  while (!update_queue_.empty() && update_queue_.front().when < update_time_) {
+    absl::c_pop_heap(update_queue_, ValueComparator());
+    Value& value = update_queue_.back();
     value.function();
     if (value.repeat == absl::InfiniteDuration()) {
-      queue_.pop_back();
+      update_queue_.pop_back();
     } else {
       value.when += value.repeat;
-      absl::c_push_heap(queue_, ValueComparator());
+      absl::c_push_heap(update_queue_, ValueComparator());
     }
   }
 }
