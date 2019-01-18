@@ -16,10 +16,10 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "gtest/gtest.h"
+#include "gamma/common/watch.hpp"
 
 #include "absl/time/clock.h"
-#include "gamma/common/watch.hpp"
+#include "gtest/gtest.h"
 
 namespace y {
 namespace {

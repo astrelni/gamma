@@ -16,9 +16,10 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+#include "gamma/common/log.hpp"
+
 #include <string>
 
-#include "gamma/common/log.hpp"
 #include "gtest/gtest.h"
 
 namespace y {
