@@ -183,6 +183,43 @@ cc_library(
 # Vulkan
 
 # LuaJIT
+http_archive(
+    name = "luajit",
+    urls = ["https://github.com/LuaJIT/LuaJIT/archive/v2.0.5.zip"],
+    strip_prefix = "LuaJIT-2.0.5",
+    build_file_content = """
+genrule(
+    name = "luajit_ar",
+    srcs =
+        [
+            "Makefile",
+            "src/Makefile",
+            "src/Makefile.dep",
+            "src/lj.supp",
+            "src/host/genminilua.lua",
+        ] +
+        glob(["src/*.h"]) +
+        glob(["src/*.c"]) +
+        glob(["src/*.dasc"]) +
+        glob(["src/host/*.h"]) +
+        glob(["src/host/*.c"]) +
+        glob(["src/jit/*.lua"]) +
+        glob(["dynasm/*.h"]) +
+        glob(["dynasm/*.lua"]),
+    outs = ["libluajit.a"],
+    cmd = "make -C external/luajit && cp external/luajit/src/libluajit.a $(OUTS)",
+)
+
+cc_library(
+    name = "luajit",
+    visibility = ["//visibility:public"],
+    srcs = glob(["src/*.h"]) + ["libluajit.a"],
+    hdrs = ["src/lua.hpp"],
+    includes = ["src"],
+    linkopts = ["-ldl"],
+)
+"""
+)
 
 # Bullet Physics
 
