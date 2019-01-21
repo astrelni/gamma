@@ -34,7 +34,9 @@ class LuaState {
   LuaState(const LuaState&) = delete;
   LuaState& operator=(const LuaState&) = delete;
 
-  lua_State* get() const noexcept;
+  lua_State* get() const;
+
+  explicit operator bool() const;
 
   static LuaState Open();
 
@@ -61,7 +63,9 @@ inline LuaState& LuaState::operator=(LuaState&& x) noexcept {
 
 inline LuaState::~LuaState() { clear(); }
 
-inline lua_State* LuaState::get() const noexcept { return state_; }
+inline lua_State* LuaState::get() const { return state_; }
+
+inline LuaState::operator bool() const { return state_ != nullptr; }
 
 inline void LuaState::clear() {
   if (state_ != nullptr) lua_close(state_);
