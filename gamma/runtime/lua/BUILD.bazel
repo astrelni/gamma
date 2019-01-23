@@ -19,6 +19,22 @@
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
+    name = "table",
+    hdrs = ["table.hpp"],
+    srcs = ["table.cpp"],
+    deps = ["@luajit//:luajit"],
+)
+
+cc_test(
+    name = "table_test",
+    srcs = ["table_test.cpp"],
+    deps = [
+        ":table",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_library(
     name = "state",
     hdrs = ["state.hpp"],
     srcs = ["state.cpp"],
