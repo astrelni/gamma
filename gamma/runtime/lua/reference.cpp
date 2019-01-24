@@ -1,4 +1,4 @@
-// Copyright (c) 2018 Aleksey Strelnikov
+// Copyright (c) 2018-2019 Aleksey Strelnikov
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -16,24 +16,42 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef GAMMA_RUNTIME_LUA_TABLE_HPP_
-#define GAMMA_RUNTIME_LUA_TABLE_HPP_
-
 #include "gamma/runtime/lua/reference.hpp"
 
 namespace y {
 
-// RAII wrapper for a Lua reference to a table.
-class LuaTable : public LuaReference {
- public:
-  explicit LuaTable(lua_State* L);
+LuaReference::LuaReference(lua_State* L)
+    : state_(L), ref_(luaL_ref(state_, LUA_REGISTRYINDEX)) {}
 
-  LuaTable() = default;
-};
+LuaReference::LuaReference(LuaReference&& x) noexcept
+    : state_(x.state_), ref_(x.ref_) {
+  x.state_ = nullptr;
+  x.ref_ = LUA_NOREF;
+}
 
-LuaTable LuaNewTable(lua_State* L);
+LuaReference& LuaReference::operator=(LuaReference&& x) noexcept {
+  clear();
+  state_ = x.state_;
+  ref_ = x.ref_;
+  x.state_ = nullptr;
+  x.ref_ = LUA_NOREF;
+  return *this;
+}
 
-LuaTable LuaGetGlobalEnvironment(lua_State* L);
+LuaReference::~LuaReference() { clear(); }
+
+void LuaReference::reset(lua_State* L) {
+  clear();
+  state_ = L;
+  ref_ = luaL_ref(state_, LUA_REGISTRYINDEX);
+}
+
+void LuaReference::clear() {
+  if (ref_ != LUA_NOREF) {
+    luaL_unref(state_, LUA_REGISTRYINDEX, ref_);
+    state_ = nullptr;
+    ref_ = LUA_NOREF;
+  }
+}
 
 }  // namespace y
-#endif  // GAMMA_RUNTIME_LUA_TABLE_HPP_

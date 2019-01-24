@@ -19,10 +19,30 @@
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
+    name = "reference",
+    hdrs = ["reference.hpp"],
+    srcs = ["reference.cpp"],
+    deps = ["@luajit//:luajit"],
+)
+
+cc_test(
+    name = "reference_test",
+    srcs = ["reference_test.cpp"],
+    deps = [
+        ":reference",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_library(
     name = "table",
     hdrs = ["table.hpp"],
     srcs = ["table.cpp"],
-    deps = ["@luajit//:luajit"],
+    deps = [
+        ":reference",
+        "//gamma/common:log",
+        "@luajit//:luajit",
+    ],
 )
 
 cc_test(

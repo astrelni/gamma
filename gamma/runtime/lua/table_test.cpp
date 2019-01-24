@@ -36,60 +36,16 @@ class LuaTableTest : public ::testing::Test {
 };
 
 TEST_F(LuaTableTest, Construction) {
-  LuaTable t1;
-  EXPECT_FALSE(t1);
-  EXPECT_EQ(nullptr, t1.rawState());
-
-  lua_newtable(L);
-  LuaTable t2(L);
-  EXPECT_TRUE(t2);
-}
-
-TEST_F(LuaTableTest, Move) {
-  lua_newtable(L);
-  LuaTable t1(L);
-  LuaTable t2 = std::move(t1);
-  EXPECT_FALSE(t1);
-  EXPECT_EQ(nullptr, t1.rawState());
-
-  LuaTable t3;
-  t3 = std::move(t2);
-  EXPECT_FALSE(t2);
-  EXPECT_EQ(nullptr, t2.rawState());
-}
-
-TEST_F(LuaTableTest, State) {
-  lua_newtable(L);
-  LuaTable table(L);
-  EXPECT_EQ(L, table.rawState());
-}
-
-TEST_F(LuaTableTest, Push) {
-  lua_newtable(L);
-  lua_pushvalue(L, -1);
-  int stack_size = lua_gettop(L);
-  LuaTable table(L);
-  EXPECT_EQ(stack_size - 1, lua_gettop(L));
-  table.push();
-  EXPECT_TRUE(lua_equal(L, -1, -2));
-}
-
-TEST_F(LuaTableTest, Copy) {
-  lua_newtable(L);
-  LuaTable t1(L);
-  LuaTable t2 = LuaTable::MakeCopy(t1);
-  EXPECT_TRUE(t2);
-  t1.push();
-  t2.push();
-  EXPECT_TRUE(lua_equal(L, -1, -2));
-}
-
-TEST_F(LuaTableTest, Clear) {
-  lua_newtable(L);
-  LuaTable table(L);
-  EXPECT_TRUE(table);
-  table.clear();
+  LuaTable table;
   EXPECT_FALSE(table);
+  lua_newtable(L);
+  table = LuaTable(L);
+  EXPECT_TRUE(table);
+}
+
+TEST_F(LuaTableTest, NewTable) {
+  LuaTable table = LuaNewTable(L);
+  EXPECT_TRUE(table);
 }
 
 TEST_F(LuaTableTest, GlobalEnv) {

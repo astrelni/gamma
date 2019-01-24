@@ -18,50 +18,13 @@
 
 #include "gamma/runtime/lua/table.hpp"
 
+#include "gamma/common/log.hpp"
+
 namespace y {
 
-LuaTable::LuaTable(lua_State* L) {
-  if (lua_istable(L, -1)) {
-    state_ = L;
-    ref_ = luaL_ref(state_, LUA_REGISTRYINDEX);
-  } else {
-    state_ = nullptr;
-    ref_ = LUA_NOREF;
-  }
-}
-
-LuaTable::LuaTable(LuaTable&& x) noexcept : state_(x.state_), ref_(x.ref_) {
-  x.state_ = nullptr;
-  x.ref_ = LUA_NOREF;
-}
-
-LuaTable& LuaTable::operator=(LuaTable&& x) noexcept {
-  clear();
-  state_ = x.state_;
-  ref_ = x.ref_;
-  x.state_ = nullptr;
-  x.ref_ = LUA_NOREF;
-  return *this;
-}
-
-LuaTable::~LuaTable() { clear(); }
-
-LuaTable LuaTable::MakeCopy(const LuaTable& x) {
-  LuaTable table;
-  table.state_ = x.state_;
-  if (x) {
-    x.push();
-    table.ref_ = luaL_ref(table.state_, LUA_REGISTRYINDEX);
-  }
-  return table;
-}
-
-void LuaTable::clear() {
-  if (ref_ != LUA_NOREF) {
-    luaL_unref(state_, LUA_REGISTRYINDEX, ref_);
-    state_ = nullptr;
-    ref_ = LUA_NOREF;
-  }
+LuaTable::LuaTable(lua_State* L) : LuaReference() {
+  YERR_IF(!lua_istable(L, -1));
+  reset(L);
 }
 
 LuaTable LuaNewTable(lua_State* L) {
