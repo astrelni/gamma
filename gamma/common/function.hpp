@@ -45,7 +45,7 @@ class Function<R(Args...)> {
   Function(Function&& other) noexcept
       : destructive_move_(other.destructive_move_), call_(other.call_) {
     if (destructive_move_ != nullptr) {
-      destructive_move_(&other.bytes_, &bytes_);
+      destructive_move_(other.bytes_, bytes_);
       other.destructive_move_ = nullptr;
       other.call_ = nullptr;
     }
@@ -56,7 +56,7 @@ class Function<R(Args...)> {
     if (other.destructive_move_ != nullptr) {
       destructive_move_ = other.destructive_move_;
       call_ = other.call_;
-      destructive_move_(&other.bytes_, &bytes_);
+      destructive_move_(other.bytes_, bytes_);
       other.destructive_move_ = nullptr;
       other.call_ = nullptr;
     }
