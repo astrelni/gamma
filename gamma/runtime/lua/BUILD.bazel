@@ -21,11 +21,13 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "lua",
     hdrs = [
+        "function.hpp",
         "reference.hpp",
         "state.hpp",
         "table.hpp",
     ],
     srcs = [
+        "function.cpp",
         "reference.cpp",
         "state.cpp",
         "table.cpp",
@@ -48,6 +50,15 @@ cc_test(
 cc_test(
     name = "table_test",
     srcs = ["table_test.cpp"],
+    deps = [
+        ":lua",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "function_test",
+    srcs = ["function_test.cpp"],
     deps = [
         ":lua",
         "@com_google_googletest//:gtest_main",
