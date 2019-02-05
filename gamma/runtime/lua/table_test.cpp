@@ -18,22 +18,13 @@
 
 #include "gamma/runtime/lua/table.hpp"
 
+#include "gamma/runtime/lua/test_base.hpp"
 #include "gtest/gtest.h"
 
 namespace y {
 namespace {
 
-class LuaTableTest : public ::testing::Test {
- public:
-  virtual void SetUp() override {
-    L = luaL_newstate();
-    luaL_openlibs(L);
-  }
-
-  virtual void TearDown() override { lua_close(L); }
-
-  lua_State* L;
-};
+class LuaTableTest : public LuaTestBase {};
 
 TEST_F(LuaTableTest, Construction) {
   LuaTable table;

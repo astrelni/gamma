@@ -18,12 +18,15 @@
 
 #include "gamma/runtime/lua/stack.hpp"
 
+#include "gamma/runtime/lua/test_base.hpp"
 #include "gtest/gtest.h"
 
 namespace y {
 namespace {
 
-// things
+class LuaStackTest : public LuaTestBase {};
+
+TEST_F(LuaStackTest, TBD) {}
 
 }  // namespace
 }  // namespace y

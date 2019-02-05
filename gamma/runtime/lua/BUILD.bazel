@@ -21,7 +21,10 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "lua",
     hdrs = [
+        "access.hpp",
+        "call.hpp",
         "function.hpp",
+        "invoke.hpp",
         "reference.hpp",
         "stack.hpp",
         "state.hpp",
@@ -42,11 +45,31 @@ cc_library(
     ]
 )
 
+cc_library(
+    name = "lua_test_base",
+    hdrs = ["test_base.hpp"],
+    testonly = 1,
+    deps = [
+        "@com_google_googletest//:gtest",
+        "@luajit//:luajit",
+    ]
+)
+
+cc_test(
+    name = "state_test",
+    srcs = ["state_test.cpp"],
+    deps = [
+        ":lua",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
 cc_test(
     name = "reference_test",
     srcs = ["reference_test.cpp"],
     deps = [
         ":lua",
+        ":lua_test_base",
         "@com_google_googletest//:gtest_main",
     ],
 )
@@ -56,6 +79,7 @@ cc_test(
     srcs = ["table_test.cpp"],
     deps = [
         ":lua",
+        ":lua_test_base",
         "@com_google_googletest//:gtest_main",
     ],
 )
@@ -65,6 +89,7 @@ cc_test(
     srcs = ["function_test.cpp"],
     deps = [
         ":lua",
+        ":lua_test_base",
         "@com_google_googletest//:gtest_main",
     ],
 )
@@ -74,6 +99,27 @@ cc_test(
     srcs = ["stack_test.cpp"],
     deps = [
         ":lua",
+        ":lua_test_base",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "call_test",
+    srcs = ["call_test.cpp"],
+    deps = [
+        ":lua",
+        ":lua_test_base",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "invoke_test",
+    srcs = ["invoke_test.cpp"],
+    deps = [
+        ":lua",
+        ":lua_test_base",
         "@com_google_googletest//:gtest_main",
     ],
 )

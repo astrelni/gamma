@@ -16,27 +16,26 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef GAMMA_RUNTIME_LUA_FUNCTION_HPP_
-#define GAMMA_RUNTIME_LUA_FUNCTION_HPP_
+#ifndef GAMMA_RUNTIME_LUA_TESTING_BASE_HPP_
+#define GAMMA_RUNTIME_LUA_TESTING_BASE_HPP_
 
+#include "gtest/gtest.h"
 #include "lua.hpp"
-
-#include "gamma/runtime/lua/reference.hpp"
-#include "gamma/runtime/lua/table.hpp"
 
 namespace y {
 
-// RAII wrapper for a Lua reference to a function.
-class LuaFunction : public LuaReference {
- public:
-  // Get the reference from the top of the lua stack.
-  explicit LuaFunction(lua_State* L);
+class LuaTestBase : public ::testing::Test {
+ protected:
+  virtual void SetUp() override {
+    L = luaL_newstate();
+    luaL_openlibs(L);
+  }
 
-  LuaFunction() = default;
+  virtual void TearDown() override { lua_close(L); }
 
-  // Set the environment for the function call (see docs for lua_setfenv).
-  void setEnvironment(const LuaTable& env);
+  lua_State* L;
 };
 
 }  // namespace y
-#endif  // GAMMA_RUNTIME_LUA_FUNCTION_HPP_
+
+#endif  // GAMMA_RUNTIME_LUA_TESTING_BASE_HPP_

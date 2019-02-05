@@ -16,26 +16,38 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "gamma/runtime/lua/function.hpp"
+#ifndef GAMMA_RUNTIME_LUA_CALL_HPP_
+#define GAMMA_RUNTIME_LUA_CALL_HPP_
+
+#include <utility>
 
 #include "gamma/common/log.hpp"
+#include "gamma/runtime/lua/stack.hpp"
+#include "lua.hpp"
 
 namespace y {
 
-LuaFunction::LuaFunction(lua_State* L) : LuaReference() {
-  YERR_IF(!lua_isfunction(L, -1));
-  reset(L);
+// Call the function at the top of the lua stack, logging any errors. Pops the
+// function off the top of the stack. In the case of returning a value, does not
+// leave that value on the stack.
+void LuaPCall(lua_State* L, int nargs);
+template <typename R>
+R LuaPCall(lua_State* L, int nargs);
+
+// -----------------------------------------------------------------------------
+//                      Implementation Details Follow
+
+inline void LuaPCall(lua_State* L, int nargs) {
+  if (lua_pcall(L, nargs, 0, 0)) YERR_RAW << lua_tostring(L, -1);
 }
 
-void LuaFunction::setEnvironment(const LuaTable& env) {
-  YERR_IF(!env) << "environment table does not hold a valid reference.";
-  lua_State* L = rawState();
-  YERR_IF(L != env.rawState()) << "function and environment table were not "
-                                  "created from the same lua state.";
-  push();
-  env.push();
-  YERR_IF(lua_setfenv(L, -2) == 0);
+template <typename R>
+R LuaPCall(lua_State* L, int nargs) {
+  if (lua_pcall(L, nargs, 1, 0)) YERR_RAW << lua_tostring(L, -1);
+  R r = ::y::LuaGet<R>(L, 1);
   lua_pop(L, 1);
+  return std::forward<R>(r);
 }
 
 }  // namespace y
+#endif  // GAMMA_RUNTIME_LUA_CALL_HPP_
