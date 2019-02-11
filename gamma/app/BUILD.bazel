@@ -52,6 +52,8 @@ cc_library(
     deps = [
         ":app_settings_cc_proto",
         "//gamma/common:glfw",
+        "//gamma/common:function_queue",
+        "//gamma/common:watch",
         "//gamma/graphics/vk",
         "@com_google_absl//absl/memory",
     ],

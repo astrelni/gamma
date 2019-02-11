@@ -19,7 +19,10 @@
 #include "gamma/app/app.hpp"
 
 #include "absl/memory/memory.h"
+#include "absl/time/clock.h"
+#include "absl/time/time.h"
 #include "gamma/common/log.hpp"
+#include "gamma/common/watch.hpp"
 
 namespace y {
 
@@ -33,8 +36,11 @@ void App::init(const AppSettings& settings) {
 void App::run() {
   YERR_IF(window_ == nullptr) << "Applicaton has not been initialized";
 
-  while (!signal_close) {
-    // things
+  Watch watch;
+  while (!signal_close_) {
+    absl::Duration dt = watch.lap();
+    function_queue_.update(dt);
+    absl::SleepFor(absl::Milliseconds(16));
   }
 }
 

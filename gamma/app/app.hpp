@@ -21,12 +21,15 @@
 
 #include "gamma/app/app_settings.pb.h"
 #include "gamma/app/window.hpp"
+#include "gamma/common/function_queue.hpp"
 #include "gamma/common/glfw.hpp"
 
 namespace y {
 
 class App {
  public:
+  enum class Event {};
+
   App() = default;
 
   void init(const AppSettings& settings);
@@ -35,11 +38,28 @@ class App {
 
   void signalClose() { signal_close_ = true; }
 
+  // void setEventCallback(Event event, Function f);
+
+  void callAfter(absl::Duration delay, Function<void()> f);
+  void callEvery(absl::Duration interval, Function<void()> f);
+
  private:
   GlfwState glfw_state_;
   std::unique_ptr<Window> window_;
   bool signal_close_ = false;
+  FunctionQueue function_queue_;
 };
+
+// -----------------------------------------------------------------------------
+//                      Implementation Details Follow
+
+inline void App::callAfter(absl::Duration delay, Function<void()> f) {
+  function_queue_.callAfter(delay, std::move(f));
+}
+
+inline void App::callEvery(absl::Duration interval, Function<void()> f) {
+  function_queue_.callEvery(interval, std::move(f));
+}
 
 }  // namespace y
 #endif  // GAMMA_APP_APP_HPP_
