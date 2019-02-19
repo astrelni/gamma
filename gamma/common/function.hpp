@@ -90,9 +90,7 @@ class Function<R(Args...)> {
     return *this;
   }
 
-  explicit operator bool() const noexcept {
-    return destructive_move_ != nullptr;
-  }
+  explicit operator bool() const { return destructive_move_ != nullptr; }
 
   R operator()(Args&&... args) {
     return call_(bytes_, std::forward<Args>(args)...);
