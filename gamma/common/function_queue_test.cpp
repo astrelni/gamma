@@ -29,7 +29,7 @@ namespace {
 TEST(FunctionQueueTest, BasicSetTimeout) {
   FunctionQueue queue;
   bool called = false;
-  queue.setTimeout(absl::Seconds(1), [&called]() { called = true; });
+  queue.setTimeout([&called]() { called = true; }, absl::Seconds(1));
   EXPECT_FALSE(called);
 
   queue.update(absl::Seconds(1));
@@ -42,7 +42,7 @@ TEST(FunctionQueueTest, BasicSetTimeout) {
 TEST(FunctionQueueTest, SetTimeoutZeroDelay) {
   FunctionQueue queue;
   bool called = false;
-  queue.setTimeout(absl::ZeroDuration(), [&called]() { called = true; });
+  queue.setTimeout([&called]() { called = true; }, absl::ZeroDuration());
   EXPECT_FALSE(called);
 
   queue.update(absl::Nanoseconds(1));
@@ -62,7 +62,7 @@ TEST(FunctionQueueTest, CallInCorrectOrder) {
 
   std::vector<int> output;
   for (int i : input) {
-    queue.setTimeout(absl::Seconds(i), [&output, i]() { output.push_back(i); });
+    queue.setTimeout([&output, i]() { output.push_back(i); }, absl::Seconds(i));
   }
 
   queue.update(absl::Seconds(100));
