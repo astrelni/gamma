@@ -43,7 +43,7 @@ class FunctionQueue {
   //
   // A `delay` of zero causes the function to be called on the next call to
   // `update()` with a positive `dt`.
-  void callAfter(absl::Duration delay, Function<void()> f);
+  void setTimeout(absl::Duration delay, Function<void()> f);
 
   void update(absl::Duration dt);
 

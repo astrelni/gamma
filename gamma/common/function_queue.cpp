@@ -27,7 +27,7 @@ struct FunctionQueue::ValueComparator {
   bool operator()(const Value& a, const Value& b) { return a.when > b.when; }
 };
 
-void FunctionQueue::callAfter(absl::Duration delay, Function<void()> f) {
+void FunctionQueue::setTimeout(absl::Duration delay, Function<void()> f) {
   YERR_IF(delay < absl::ZeroDuration());
   absl::MutexLock lock(&staging_mutex_);
   staging_buffer_.push_back(Value({staging_time_ + delay, std::move(f)}));
