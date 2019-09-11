@@ -45,27 +45,12 @@ class FunctionQueue {
   // `update()` with a positive `dt`.
   void callAfter(absl::Duration delay, Function<void()> f);
 
-  // Register `f` to be called repeatedly after at least `interval` time has
-  // passed as seen by `update()`. `interval` must be non-negative.
-  //
-  // A zero `interval` is a special case that causes a function to be
-  // called exactly once per call to `update()` with a positive `dt`. A positive
-  // `interval` can cause the function to be called multiple times if the call
-  // to `update()` is made with a `dt` larger than `interval`.
-  //
-  // Note: subsequent timeouts are calculated using the time when a function
-  // should have been called, and not when it actually ended up being called. In
-  // otherwords, after a cumulative `update()` time of `n * interval`, the
-  // function will have been called `n` times.
-  void callEvery(absl::Duration interval, Function<void()> f);
-
   void update(absl::Duration dt);
 
  private:
   struct Value {
     absl::Time when;
     Function<void()> function;
-    absl::Duration repeat;
   };
 
   struct ValueComparator;
@@ -78,7 +63,6 @@ class FunctionQueue {
 
   absl::Mutex update_mutex_;
   absl::Time update_time_;
-  std::vector<Function<void()>> call_every_update_;
   std::vector<Value> update_queue_;
 };
 

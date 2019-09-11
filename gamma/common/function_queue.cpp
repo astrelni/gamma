@@ -30,15 +30,7 @@ struct FunctionQueue::ValueComparator {
 void FunctionQueue::callAfter(absl::Duration delay, Function<void()> f) {
   YERR_IF(delay < absl::ZeroDuration());
   absl::MutexLock lock(&staging_mutex_);
-  staging_buffer_.push_back(
-      Value({staging_time_ + delay, std::move(f), absl::InfiniteDuration()}));
-}
-
-void FunctionQueue::callEvery(absl::Duration interval, Function<void()> f) {
-  YERR_IF(interval < absl::ZeroDuration());
-  absl::MutexLock lock(&staging_mutex_);
-  staging_buffer_.push_back(
-      Value({staging_time_ + interval, std::move(f), interval}));
+  staging_buffer_.push_back(Value({staging_time_ + delay, std::move(f)}));
 }
 
 void FunctionQueue::consumeStaging(absl::Duration dt) {
@@ -48,12 +40,8 @@ void FunctionQueue::consumeStaging(absl::Duration dt) {
   update_time_ = staging_time_;
 
   for (Value& value : staging_buffer_) {
-    if (value.repeat == absl::ZeroDuration()) {
-      call_every_update_.push_back(std::move(value.function));
-    } else {
-      update_queue_.push_back(std::move(value));
-      absl::c_push_heap(update_queue_, ValueComparator());
-    }
+    update_queue_.push_back(std::move(value));
+    absl::c_push_heap(update_queue_, ValueComparator());
   }
   staging_buffer_.clear();
 }
@@ -65,18 +53,11 @@ void FunctionQueue::update(absl::Duration dt) {
 
   consumeStaging(dt);
 
-  for (Function<void()>& f : call_every_update_) f();
-
   while (!update_queue_.empty() && update_queue_.front().when < update_time_) {
     absl::c_pop_heap(update_queue_, ValueComparator());
     Value& value = update_queue_.back();
     value.function();
-    if (value.repeat == absl::InfiniteDuration()) {
-      update_queue_.pop_back();
-    } else {
-      value.when += value.repeat;
-      absl::c_push_heap(update_queue_, ValueComparator());
-    }
+    update_queue_.pop_back();
   }
 }
 

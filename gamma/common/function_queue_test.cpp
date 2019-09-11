@@ -39,18 +39,6 @@ TEST(FunctionQueueTest, BasicCallAfter) {
   EXPECT_TRUE(called);
 }
 
-TEST(FunctionQueueTest, BasicCallEvery) {
-  FunctionQueue queue;
-  int times_called = 0;
-  queue.callEvery(absl::Seconds(1), [&times_called]() { ++times_called; });
-  EXPECT_EQ(0, times_called);
-
-  for (int i = 0; i < 10; ++i) {
-    queue.update(absl::Seconds(1));
-    EXPECT_EQ(i, times_called);
-  }
-}
-
 TEST(FunctionQueueTest, CallAfterZeroDelay) {
   FunctionQueue queue;
   bool called = false;
@@ -59,42 +47,6 @@ TEST(FunctionQueueTest, CallAfterZeroDelay) {
 
   queue.update(absl::Nanoseconds(1));
   EXPECT_TRUE(called);
-}
-
-TEST(FunctionQueueTest, CallEveryZeroInterval) {
-  FunctionQueue queue;
-  int times_called = 0;
-  queue.callEvery(absl::ZeroDuration(), [&times_called]() { ++times_called; });
-  EXPECT_EQ(0, times_called);
-
-  queue.update(absl::Nanoseconds(1));
-  EXPECT_EQ(1, times_called);
-
-  queue.update(absl::Microseconds(1));
-  EXPECT_EQ(2, times_called);
-
-  queue.update(absl::Milliseconds(1));
-  EXPECT_EQ(3, times_called);
-
-  queue.update(absl::Seconds(1));
-  EXPECT_EQ(4, times_called);
-}
-
-TEST(FunctionQueueTest, CallEveryShortIntervalLargeUpdate) {
-  FunctionQueue queue;
-  int times_called = 0;
-  queue.callEvery(absl::Seconds(1), [&times_called]() { ++times_called; });
-  EXPECT_EQ(0, times_called);
-
-  // A long update still only causes one call.
-  queue.update(absl::Minutes(1));
-  EXPECT_EQ(59, times_called);
-
-  queue.update(absl::ZeroDuration());
-  EXPECT_EQ(59, times_called);
-
-  queue.update(absl::Nanoseconds(1));
-  EXPECT_EQ(60, times_called);
 }
 
 TEST(FunctionQueueTest, CallInCorrectOrder) {
@@ -109,20 +61,15 @@ TEST(FunctionQueueTest, CallInCorrectOrder) {
   std::shuffle(input.begin(), input.end(), gen);
 
   std::vector<int> output;
-
-  queue.callEvery(absl::Seconds(1), [&output]() { output.push_back(-1); });
-  queue.update(absl::Milliseconds(500));
-
   for (int i : input) {
     queue.callAfter(absl::Seconds(i), [&output, i]() { output.push_back(i); });
   }
 
   queue.update(absl::Seconds(100));
 
-  EXPECT_EQ(200, output.size());
+  EXPECT_EQ(100, output.size());
   for (int i = 0; i < 100; ++i) {
-    EXPECT_EQ(i, output[2 * i]);
-    EXPECT_EQ(-1, output[2 * i + 1]);
+    EXPECT_EQ(i, output[i]);
   }
 }
 
