@@ -1,0 +1,126 @@
+# Copyright (c) 2018-2019 Aleksey Strelnikov
+#
+# This software is provided 'as-is', without any express or implied
+# warranty. In no event will the authors be held liable for any damages
+# arising from the use of this software.
+#
+# Permission is granted to anyone to use this software for any purpose,
+# including commercial applications, and to alter it and redistribute it
+# freely, subject to the following restrictions:
+#
+# 1. The origin of this software must not be misrepresented; you must not
+#    claim that you wrote the original software. If you use this software
+#    in a product, an acknowledgment in the product documentation would be
+#    appreciated but is not required.
+# 2. Altered source versions must be plainly marked as such, and must not be
+#    misrepresented as being the original software.
+# 3. This notice may not be removed or altered from any source distribution.
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "lua",
+    hdrs = [
+        "access.hpp",
+        "call.hpp",
+        "function.hpp",
+        "invoke.hpp",
+        "reference.hpp",
+        "run.hpp",
+        "stack.hpp",
+        "state.hpp",
+        "table.hpp",
+    ],
+    srcs = [
+        "function.cpp",
+        "reference.cpp",
+        "state.cpp",
+        "table.cpp",
+    ],
+    deps = [
+        "//gamma/common:log",
+        "@com_google_absl//absl/base:core_headers",
+        "@com_google_absl//absl/meta:type_traits",
+        "@com_google_absl//absl/strings",
+        "@luajit//:luajit",
+    ]
+)
+
+cc_library(
+    name = "lua_test_base",
+    hdrs = ["test_base.hpp"],
+    testonly = 1,
+    deps = [
+        "@com_google_googletest//:gtest",
+        "@luajit//:luajit",
+    ]
+)
+
+cc_test(
+    name = "state_test",
+    srcs = ["state_test.cpp"],
+    deps = [
+        ":lua",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "reference_test",
+    srcs = ["reference_test.cpp"],
+    deps = [
+        ":lua",
+        ":lua_test_base",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "table_test",
+    srcs = ["table_test.cpp"],
+    deps = [
+        ":lua",
+        ":lua_test_base",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "function_test",
+    srcs = ["function_test.cpp"],
+    deps = [
+        ":lua",
+        ":lua_test_base",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "stack_test",
+    srcs = ["stack_test.cpp"],
+    deps = [
+        ":lua",
+        ":lua_test_base",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "call_test",
+    srcs = ["call_test.cpp"],
+    deps = [
+        ":lua",
+        ":lua_test_base",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "invoke_test",
+    srcs = ["invoke_test.cpp"],
+    deps = [
+        ":lua",
+        ":lua_test_base",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
