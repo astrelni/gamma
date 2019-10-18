@@ -46,6 +46,7 @@ http_archive(
 # GLFW
 http_archive(
     name = "glfw",
+    sha256 = "e10f0de1384d75e6fc210c53e91843f6110d6c4f3afbfb588130713c2f9d8fe8",
     urls = ["https://github.com/glfw/glfw/archive/3.2.1.tar.gz"],
     strip_prefix = "glfw-3.2.1",
     build_file_content = """
@@ -135,6 +136,7 @@ cc_library(
 # glslang
 http_archive(
   name = "glslang",
+  sha256 = "1dc6baa9394518d1cabc3a38cf7e5ecaaafe23447d04f29d7a2f5c667ea89024",
   urls = ["https://github.com/KhronosGroup/glslang/archive/7.10.2984.zip"],
   strip_prefix = "glslang-7.10.2984",
   build_file_content = """

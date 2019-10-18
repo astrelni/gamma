@@ -23,8 +23,8 @@ cc_library(
     hdrs = [
         "context.hpp",
         "device.hpp",
-        "instance.hpp",
         "glsl.hpp",
+        "instance.hpp",
         "pipeline.hpp",
         "queue.hpp",
         "shader_module.hpp",

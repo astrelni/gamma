@@ -19,7 +19,6 @@
 #ifndef GAMMA_GRAPHICS_VK_DEVICE_HPP_
 #define GAMMA_GRAPHICS_VK_DEVICE_HPP_
 
-#include "gamma/common/glfw.hpp"
 #include "gamma/graphics/vk/instance.hpp"
 #include "gamma/graphics/vk/queue.hpp"
 #include "gamma/graphics/vk/surface.hpp"
