@@ -20,141 +20,59 @@
 
 #include <stdio.h>
 
-#include "SPIRV/GlslangToSpv.h"
+#include "shaderc/shaderc.hpp"
+
 #include "absl/container/fixed_array.h"
 #include "absl/memory/memory.h"
 #include "absl/strings/match.h"
 #include "gamma/common/log.hpp"
-#include "glslang/Include/ResourceLimits.h"
 
 namespace y {
 namespace {
 
-TBuiltInResource DefaultResource() {
-  return {/* .MaxLights = */ 32,
-          /* .MaxClipPlanes = */ 6,
-          /* .MaxTextureUnits = */ 32,
-          /* .MaxTextureCoords = */ 32,
-          /* .MaxVertexAttribs = */ 64,
-          /* .MaxVertexUniformComponents = */ 4096,
-          /* .MaxVaryingFloats = */ 64,
-          /* .MaxVertexTextureImageUnits = */ 32,
-          /* .MaxCombinedTextureImageUnits = */ 80,
-          /* .MaxTextureImageUnits = */ 32,
-          /* .MaxFragmentUniformComponents = */ 4096,
-          /* .MaxDrawBuffers = */ 32,
-          /* .MaxVertexUniformVectors = */ 128,
-          /* .MaxVaryingVectors = */ 8,
-          /* .MaxFragmentUniformVectors = */ 16,
-          /* .MaxVertexOutputVectors = */ 16,
-          /* .MaxFragmentInputVectors = */ 15,
-          /* .MinProgramTexelOffset = */ -8,
-          /* .MaxProgramTexelOffset = */ 7,
-          /* .MaxClipDistances = */ 8,
-          /* .MaxComputeWorkGroupCountX = */ 65535,
-          /* .MaxComputeWorkGroupCountY = */ 65535,
-          /* .MaxComputeWorkGroupCountZ = */ 65535,
-          /* .MaxComputeWorkGroupSizeX = */ 1024,
-          /* .MaxComputeWorkGroupSizeY = */ 1024,
-          /* .MaxComputeWorkGroupSizeZ = */ 64,
-          /* .MaxComputeUniformComponents = */ 1024,
-          /* .MaxComputeTextureImageUnits = */ 16,
-          /* .MaxComputeImageUniforms = */ 8,
-          /* .MaxComputeAtomicCounters = */ 8,
-          /* .MaxComputeAtomicCounterBuffers = */ 1,
-          /* .MaxVaryingComponents = */ 60,
-          /* .MaxVertexOutputComponents = */ 64,
-          /* .MaxGeometryInputComponents = */ 64,
-          /* .MaxGeometryOutputComponents = */ 128,
-          /* .MaxFragmentInputComponents = */ 128,
-          /* .MaxImageUnits = */ 8,
-          /* .MaxCombinedImageUnitsAndFragmentOutputs = */ 8,
-          /* .MaxCombinedShaderOutputResources = */ 8,
-          /* .MaxImageSamples = */ 0,
-          /* .MaxVertexImageUniforms = */ 0,
-          /* .MaxTessControlImageUniforms = */ 0,
-          /* .MaxTessEvaluationImageUniforms = */ 0,
-          /* .MaxGeometryImageUniforms = */ 0,
-          /* .MaxFragmentImageUniforms = */ 8,
-          /* .MaxCombinedImageUniforms = */ 8,
-          /* .MaxGeometryTextureImageUnits = */ 16,
-          /* .MaxGeometryOutputVertices = */ 256,
-          /* .MaxGeometryTotalOutputComponents = */ 1024,
-          /* .MaxGeometryUniformComponents = */ 1024,
-          /* .MaxGeometryVaryingComponents = */ 64,
-          /* .MaxTessControlInputComponents = */ 128,
-          /* .MaxTessControlOutputComponents = */ 128,
-          /* .MaxTessControlTextureImageUnits = */ 16,
-          /* .MaxTessControlUniformComponents = */ 1024,
-          /* .MaxTessControlTotalOutputComponents = */ 4096,
-          /* .MaxTessEvaluationInputComponents = */ 128,
-          /* .MaxTessEvaluationOutputComponents = */ 128,
-          /* .MaxTessEvaluationTextureImageUnits = */ 16,
-          /* .MaxTessEvaluationUniformComponents = */ 1024,
-          /* .MaxTessPatchComponents = */ 120,
-          /* .MaxPatchVertices = */ 32,
-          /* .MaxTessGenLevel = */ 64,
-          /* .MaxViewports = */ 16,
-          /* .MaxVertexAtomicCounters = */ 0,
-          /* .MaxTessControlAtomicCounters = */ 0,
-          /* .MaxTessEvaluationAtomicCounters = */ 0,
-          /* .MaxGeometryAtomicCounters = */ 0,
-          /* .MaxFragmentAtomicCounters = */ 8,
-          /* .MaxCombinedAtomicCounters = */ 8,
-          /* .MaxAtomicCounterBindings = */ 1,
-          /* .MaxVertexAtomicCounterBuffers = */ 0,
-          /* .MaxTessControlAtomicCounterBuffers = */ 0,
-          /* .MaxTessEvaluationAtomicCounterBuffers = */ 0,
-          /* .MaxGeometryAtomicCounterBuffers = */ 0,
-          /* .MaxFragmentAtomicCounterBuffers = */ 1,
-          /* .MaxCombinedAtomicCounterBuffers = */ 1,
-          /* .MaxAtomicCounterBufferSize = */ 16384,
-          /* .MaxTransformFeedbackBuffers = */ 4,
-          /* .MaxTransformFeedbackInterleavedComponents = */ 64,
-          /* .MaxCullDistances = */ 8,
-          /* .MaxCombinedClipAndCullDistances = */ 8,
-          /* .MaxSamples = */ 4,
-          /* .maxMeshOutputVerticesNV = */ 256,
-          /* .maxMeshOutputPrimitivesNV = */ 512,
-          /* .maxMeshWorkGroupSizeX_NV = */ 32,
-          /* .maxMeshWorkGroupSizeY_NV = */ 1,
-          /* .maxMeshWorkGroupSizeZ_NV = */ 1,
-          /* .maxTaskWorkGroupSizeX_NV = */ 32,
-          /* .maxTaskWorkGroupSizeY_NV = */ 1,
-          /* .maxTaskWorkGroupSizeZ_NV = */ 1,
-          /* .maxMeshViewCountNV = */ 4,
-
-          /* .limits = */
-          {
-              /* .nonInductiveForLoops = */ 1,
-              /* .whileLoops = */ 1,
-              /* .doWhileLoops = */ 1,
-              /* .generalUniformIndexing = */ 1,
-              /* .generalAttributeMatrixVectorIndexing = */ 1,
-              /* .generalVaryingIndexing = */ 1,
-              /* .generalSamplerIndexing = */ 1,
-              /* .generalVariableIndexing = */ 1,
-              /* .generalConstantMatrixVectorIndexing = */ 1,
-          }};
+shaderc_shader_kind ToShadercKind(VkShaderStageFlagBits stage) {
+  if (stage == VK_SHADER_STAGE_VERTEX_BIT) return shaderc_vertex_shader;
+  if (stage == VK_SHADER_STAGE_FRAGMENT_BIT) return shaderc_fragment_shader;
+  if (stage == VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT)
+    return shaderc_tess_control_shader;
+  if (stage == VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT)
+    return shaderc_tess_evaluation_shader;
+  if (stage == VK_SHADER_STAGE_GEOMETRY_BIT) return shaderc_geometry_shader;
+  YERR_IF(stage != VK_SHADER_STAGE_COMPUTE_BIT) << "unsupported shader stage";
+  return shaderc_compute_shader;
 }
 
-std::vector<uint32_t> TranslateGLSLToSPIRV(EShLanguage stage,
+void CheckCompilationResult(const shaderc::SpvCompilationResult& result) {
+  shaderc_compilation_status status = result.GetCompilationStatus();
+  if (status == shaderc_compilation_status_success) return;
+
+  std::string error_message = result.GetErrorMessage();
+  YERR_IF(status == shaderc_compilation_status_invalid_stage) << error_message;
+  YERR_IF(status == shaderc_compilation_status_compilation_error)
+      << error_message;
+  YERR_IF(status == shaderc_compilation_status_internal_error) << error_message;
+  YERR_IF(status == shaderc_compilation_status_null_result_object)
+      << error_message;
+  YERR_IF(status == shaderc_compilation_status_invalid_assembly)
+      << error_message;
+  YERR_IF(status == shaderc_compilation_status_validation_error)
+      << error_message;
+  YERR_IF(status == shaderc_compilation_status_transformation_error)
+      << error_message;
+}
+
+std::vector<uint32_t> TranslateGLSLToSPIRV(shaderc_shader_kind kind,
+                                           const std::string& source_name,
                                            absl::string_view source) {
-  static const TBuiltInResource resource = DefaultResource();
+  shaderc::CompileOptions options;
+  options.SetOptimizationLevel(shaderc_optimization_level_performance);
+  options.SetTargetEnvironment(shaderc_target_env_vulkan, 0);
 
-  glslang::TShader shader(stage);
-
-  const char* source_data = source.data();
-  int source_size = static_cast<int>(source.size());
-  shader.setStringsWithLengths(&source_data, &source_size, 1);
-
-  YERR_IF(!shader.parse(&resource, /* defaultVersion = */ 100,
-                        /* forwardCompatible = */ false, EShMsgDefault))
-      << shader.getInfoLog();
-
-  std::vector<uint32_t> spirv;
-  glslang::GlslangToSpv(*shader.getIntermediate(), spirv);
-  return spirv;
+  shaderc::Compiler compiler;
+  shaderc::SpvCompilationResult result = compiler.CompileGlslToSpv(
+      source.data(), source.size(), kind, source_name.c_str(), options);
+  CheckCompilationResult(result);
+  return std::vector<uint32_t>(result.begin(), result.end());
 }
 
 absl::FixedArray<char> ReadFile(const std::string& path) {
@@ -174,34 +92,38 @@ absl::FixedArray<char> ReadFile(const std::string& path) {
   return buffer;
 }
 
-EShLanguage GetShaderStageFromFilePath(absl::string_view path) {
-  if (absl::EndsWith(path, ".vert")) return EShLangVertex;
-  if (absl::EndsWith(path, ".frag")) return EShLangFragment;
-  if (absl::EndsWith(path, ".tesc")) return EShLangTessControl;
-  if (absl::EndsWith(path, ".tese")) return EShLangTessEvaluation;
-  if (absl::EndsWith(path, ".geom")) return EShLangGeometry;
+VkShaderStageFlagBits GetShaderStageFromFilePath(absl::string_view path) {
+  if (absl::EndsWith(path, ".vert")) return VK_SHADER_STAGE_VERTEX_BIT;
+  if (absl::EndsWith(path, ".frag")) return VK_SHADER_STAGE_FRAGMENT_BIT;
+  if (absl::EndsWith(path, ".tesc"))
+    return VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+  if (absl::EndsWith(path, ".tese"))
+    return VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+  if (absl::EndsWith(path, ".geom")) return VK_SHADER_STAGE_GEOMETRY_BIT;
   if (!absl::EndsWith(path, ".comp")) {
     YERR << "unsupported glsl file '" << path
          << "'; must end in one of {.vert, .frag, .tesc, .tese, .geom, .comp}";
   }
-  return EShLangCompute;
+  return VK_SHADER_STAGE_COMPUTE_BIT;
 }
 
 }  // namespace
 
-VulkanShaderModule MakeVulkanShaderFromGLSLSource(const VulkanDevice& device,
-                                                  EShLanguage stage,
-                                                  absl::string_view source) {
-  std::vector<uint32_t> byte_code = TranslateGLSLToSPIRV(stage, source);
-  return VulkanShaderModule(device, stage, byte_code);
+VulkanShaderModule MakeVulkanShaderFromGLSLSource(
+    VkDevice logical_device, const std::string& source_name,
+    absl::string_view source) {
+  VkShaderStageFlagBits stage = GetShaderStageFromFilePath(source_name);
+  std::vector<uint32_t> byte_code =
+      TranslateGLSLToSPIRV(ToShadercKind(stage), source_name, source);
+  return VulkanShaderModule(logical_device, stage, byte_code);
 }
 
-VulkanShaderModule MakeVulkanShaderFromGLSLFile(const VulkanDevice& device,
+VulkanShaderModule MakeVulkanShaderFromGLSLFile(VkDevice logical_device,
                                                 const std::string& path) {
   absl::FixedArray<char> file_data = ReadFile(path);
-  EShLanguage stage = GetShaderStageFromFilePath(path);
   return MakeVulkanShaderFromGLSLSource(
-      device, stage, absl::string_view(file_data.data(), file_data.size()));
+      logical_device, path,
+      absl::string_view(file_data.data(), file_data.size()));
 }
 
 }  // namespace y

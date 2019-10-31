@@ -22,6 +22,7 @@
 #include <cstdint>
 #include <vector>
 
+#include "absl/types/span.h"
 #include "gamma/graphics/vk/device.hpp"
 #include "glslang/Public/ShaderLang.h"
 
@@ -36,10 +37,13 @@ class VulkanShaderModule {
   VulkanShaderModule& operator=(VulkanShaderModule&& x) noexcept;
   ~VulkanShaderModule();
 
-  VulkanShaderModule(const VulkanDevice& device, EShLanguage shader_stage,
-                     const std::vector<uint32_t>& spv_byte_code);
+  VulkanShaderModule(VkDevice logical_device,
+                     VkShaderStageFlagBits shader_stage,
+                     absl::Span<const uint32_t> spv_byte_code);
 
   explicit operator bool() const;
+
+  VkShaderModule handle() const { return module_; }
 
   VkPipelineShaderStageCreateInfo makeCreateInfo() const;
 

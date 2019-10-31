@@ -23,15 +23,14 @@
 #include "absl/strings/string_view.h"
 #include "gamma/graphics/vk/device.hpp"
 #include "gamma/graphics/vk/shader_module.hpp"
-#include "glslang/Public/ShaderLang.h"
 
 namespace y {
 
-VulkanShaderModule MakeVulkanShaderFromGLSLSource(const VulkanDevice& device,
-                                                  EShLanguage stage,
-                                                  absl::string_view source);
+VulkanShaderModule MakeVulkanShaderFromGLSLSource(
+    VkDevice logical_device, const std::string& source_name,
+    absl::string_view source);
 
-VulkanShaderModule MakeVulkanShaderFromGLSLFile(const VulkanDevice& device,
+VulkanShaderModule MakeVulkanShaderFromGLSLFile(VkDevice logical_device,
                                                 const std::string& path);
 
 }  // namespace y
