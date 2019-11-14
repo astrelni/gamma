@@ -16,27 +16,21 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "gamma/app/window.hpp"
+#ifndef GAMMA_GRAPHICS_VK_GLFW_HPP_
+#define GAMMA_GRAPHICS_VK_GLFW_HPP_
 
-#include "gamma/common/log.hpp"
+#define GLFW_INCLUDE_VULKAN
+#include "GLFW/glfw3.h"
 
 namespace y {
-namespace {
 
-GLFWwindow* MakeWindow(const WindowSettings& settings) {
-  YERR_IF(!(settings.width() > 0 && settings.height() > 0))
-      << "Only windowed mode currently supported, size required.";
+void GLFWSetErrorCallback();
 
-  glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);  // using Vulkan.
-  GLFWwindow* w = glfwCreateWindow(settings.width(), settings.height(),
-                                   "TBD Title", nullptr, nullptr);
-  YERR_IF(w == nullptr);
-  return w;
-}
-
-}  // namespace
-
-Window::Window(const WindowSettings& settings)
-    : glfw_window_(MakeWindow(settings)), vulkan_context_(glfw_window_.get()) {}
+struct GLFWWindowReleaser {
+  void operator()(GLFWwindow* window) {
+    if (window != nullptr) glfwDestroyWindow(window);
+  }
+};
 
 }  // namespace y
+#endif  // GAMMA_GRAPHICS_VK_GLFW_HPP_

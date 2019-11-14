@@ -1,4 +1,3 @@
-
 // Copyright (c) 2018-2019 Aleksey Strelnikov
 //
 // This software is provided 'as-is', without any express or implied
@@ -17,11 +16,25 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef GAMMA_COMMON_GLFW_HPP_
-#define GAMMA_COMMON_GLFW_HPP_
+#ifndef GAMMA_GRAPHICS_WINDOW_HPP_
+#define GAMMA_GRAPHICS_WINDOW_HPP_
 
-#include "gamma/common/log.hpp"
-#define GLFW_INCLUDE_VULKAN
-#include "GLFW/glfw3.h"
+#include <memory>
 
-#endif  // GAMMA_COMMON_GLFW_HPP_
+#include "gamma/graphics/vk/context.hpp"
+#include "gamma/graphics/vk/glfw.hpp"
+#include "gamma/graphics/window_settings.pb.h"
+
+namespace y {
+
+class Window {
+ public:
+  void open(const WindowSettings& settings);
+
+ private:
+  std::unique_ptr<GLFWwindow, GLFWWindowReleaser> glfw_window_;
+  VulkanContext vulkan_context_;
+};
+
+}  // namespace y
+#endif  // GAMMA_GRAPHICS_WINDOW_HPP_

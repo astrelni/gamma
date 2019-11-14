@@ -16,25 +16,22 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef GAMMA_APP_WINDOW_HPP_
-#define GAMMA_APP_WINDOW_HPP_
+syntax = "proto3";
 
-#include <memory>
+package y;
 
-#include "gamma/app/window_settings.pb.h"
-#include "gamma/common/glfw.hpp"
-#include "gamma/graphics/vk/context.hpp"
+message WindowSettings {
+  string title = 1;
+  uint32 width = 2;
+  uint32 height = 3;
+  uint32 depth_bits = 4;
+  uint32 msaa_samples = 5;
 
-namespace y {
+  enum Style {
+    kWindowed = 0;
+    kFullscreen = 1;
+  }
+  Style style = 6;
 
-class Window {
- public:
-  Window(const WindowSettings& settings);
-
- private:
-  std::unique_ptr<GLFWwindow, GlfwWindowReleaser> glfw_window_;
-  VulkanContext vulkan_context_;
-};
-
-}  // namespace y
-#endif  // GAMMA_APPLICATION_WINDOW_HPP_
+  // color channels, depth format, etc
+}

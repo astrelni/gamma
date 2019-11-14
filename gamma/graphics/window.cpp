@@ -16,11 +16,31 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-syntax = "proto3";
+#include "gamma/app/window.hpp"
 
-package y;
+#include "gamma/common/log.hpp"
 
-message WindowSettings {
-  int32 width = 1;
-  int32 height = 2;
+namespace y {
+namespace {
+
+GLFWwindow* MakeWindow(const WindowSettings& settings) {
+  YERR_IF(!(settings.width() > 0 && settings.height() > 0))
+      << "Only windowed mode currently supported, size required.";
+
+  glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);  // using Vulkan.
+  GLFWwindow* window = glfwCreateWindow(settings.width(), settings.height(),
+                                        settings.title(), nullptr, nullptr);
+  YERR_IF(window == nullptr) << "Window creation failed.";
+  return window;
 }
+
+}  // namespace
+
+void Window::open(const WindowSettings& settings) {
+  YERR_IF(glfw_window_) << "Window is already open.";
+
+  glfw_window_.reset(MakeWindow(settings));
+  vulkan_context_.init(glfw_window_);
+}
+
+}  // namespace y

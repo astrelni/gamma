@@ -19,18 +19,8 @@
 package(default_visibility = ["//visibility:public"])
 
 proto_library(
-    name = "window_settings_proto",
-    srcs = ["window_settings.proto"],
-)
-
-proto_library(
     name = "app_settings_proto",
     srcs = ["app_settings.proto"],
-    deps = [":window_settings_proto"],
-)
-
-cc_proto_library(
-    name = "window_settings_cc_proto",
     deps = [":window_settings_proto"],
 )
 
