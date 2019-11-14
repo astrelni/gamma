@@ -75,14 +75,6 @@ cc_test(
 )
 
 cc_library(
-    name = "glfw",
-    hdrs = ["glfw.hpp"],
-    deps = [
-        "@glfw//:glfw",
-    ],
-)
-
-cc_library(
     name = "watch",
     hdrs = ["watch.hpp"],
     deps = ["@com_google_absl//absl/time"],
