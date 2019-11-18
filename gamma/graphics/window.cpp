@@ -16,7 +16,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "gamma/app/window.hpp"
+#include "gamma/graphics/window.hpp"
 
 #include "gamma/common/log.hpp"
 
@@ -28,19 +28,17 @@ GLFWwindow* MakeWindow(const WindowSettings& settings) {
       << "Only windowed mode currently supported, size required.";
 
   glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);  // using Vulkan.
-  GLFWwindow* window = glfwCreateWindow(settings.width(), settings.height(),
-                                        settings.title(), nullptr, nullptr);
-  YERR_IF(window == nullptr) << "Window creation failed.";
-  return window;
+  return glfwCreateWindow(settings.width(), settings.height(),
+                          settings.title().c_str(), nullptr, nullptr);
 }
 
 }  // namespace
 
 void Window::open(const WindowSettings& settings) {
-  YERR_IF(glfw_window_) << "Window is already open.";
+  YERR_IF(glfw_window_ != nullptr) << "Window is already open.";
 
   glfw_window_.reset(MakeWindow(settings));
-  vulkan_context_.init(glfw_window_);
+  // vulkan_context_.init(glfw_window_);
 }
 
 }  // namespace y
