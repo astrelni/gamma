@@ -25,6 +25,7 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 # GoogleTest
 http_archive(
      name = "com_google_googletest",
+     sha256 = "927827c183d01734cc5cfef85e0ff3f5a92ffe6188e0d18e909c5efebf28a0c7",
      urls = ["https://github.com/google/googletest/archive/release-1.8.1.zip"],
      strip_prefix = "googletest-release-1.8.1",
 )
@@ -32,6 +33,7 @@ http_archive(
 # Abseil
 http_archive(
     name = "com_google_absl",
+    sha256 = "9f545d8a072d47d80429afa467706376ffa2f3e809edec3fc1e7114c29dcb42c",
     urls = ["https://github.com/abseil/abseil-cpp/archive/66f9becbb98ecc083f4db349b4b1e0ca9de93b15.zip"],
     strip_prefix = "abseil-cpp-66f9becbb98ecc083f4db349b4b1e0ca9de93b15",
 )
@@ -39,9 +41,14 @@ http_archive(
 # Protobuf
 http_archive(
     name = "com_google_protobuf",
-    urls = ["https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-cpp-3.6.1.zip"],
-    strip_prefix = "protobuf-3.6.1",
+    sha256 = "678d91d8a939a1ef9cb268e1f20c14cd55e40361dc397bb5881e4e1e532679b1",
+    urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.10.1.zip"],
+    strip_prefix = "protobuf-3.10.1",
 )
+
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+
+protobuf_deps()
 
 # GLFW
 http_archive(
@@ -635,6 +642,7 @@ cc_library(
 # LuaJIT
 http_archive(
     name = "luajit",
+    sha256 = "2adbe397a5b6b8ab22fa8396507ce852a2495db50e50734b3daa1ffcadd9eeb4",
     urls = ["https://github.com/LuaJIT/LuaJIT/archive/v2.0.5.zip"],
     strip_prefix = "LuaJIT-2.0.5",
     build_file_content = """
