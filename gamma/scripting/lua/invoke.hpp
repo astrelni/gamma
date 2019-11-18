@@ -16,14 +16,14 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef GAMMA_RUNTIME_LUA_INVOKE_HPP_
-#define GAMMA_RUNTIME_LUA_INVOKE_HPP_
+#ifndef GAMMA_SCRIPTING_LUA_INVOKE_HPP_
+#define GAMMA_SCRIPTING_LUA_INVOKE_HPP_
 
 #include <utility>
 
-#include "gamma/runtime/lua/call.hpp"
-#include "gamma/runtime/lua/function.hpp"
-#include "gamma/runtime/lua/stack.hpp"
+#include "gamma/scripting/lua/call.hpp"
+#include "gamma/scripting/lua/function.hpp"
+#include "gamma/scripting/lua/stack.hpp"
 
 namespace y {
 
@@ -67,4 +67,4 @@ R LuaInvoke(const LuaFunction& func, Args&&... args) {
 }
 
 }  // namespace y
-#endif  // GAMMA_RUNTIME_LUA_INVOKE_HPP_
+#endif  // GAMMA_SCRIPTING_LUA_INVOKE_HPP_

@@ -16,8 +16,8 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef GAMMA_RUNTIME_LUA_REFERENCE_HPP_
-#define GAMMA_RUNTIME_LUA_REFERENCE_HPP_
+#ifndef GAMMA_SCRIPTING_LUA_REFERENCE_HPP_
+#define GAMMA_SCRIPTING_LUA_REFERENCE_HPP_
 
 #include "lua.hpp"
 
@@ -65,4 +65,4 @@ inline void LuaReference::push() const {
 inline lua_State* LuaReference::rawState() const { return state_; }
 
 }  // namespace y
-#endif  // GAMMA_RUNTIME_LUA_REFERENCE_HPP_
+#endif  // GAMMA_SCRIPTING_LUA_REFERENCE_HPP_

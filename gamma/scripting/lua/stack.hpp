@@ -16,8 +16,8 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef GAMMA_RUNTIME_LUA_STACK_HPP_
-#define GAMMA_RUNTIME_LUA_STACK_HPP_
+#ifndef GAMMA_SCRIPTING_LUA_STACK_HPP_
+#define GAMMA_SCRIPTING_LUA_STACK_HPP_
 
 #include <string>
 #include <type_traits>
@@ -28,8 +28,8 @@
 #include "absl/meta/type_traits.h"
 #include "absl/strings/string_view.h"
 #include "gamma/common/log.hpp"
-#include "gamma/runtime/lua/function.hpp"
-#include "gamma/runtime/lua/table.hpp"
+#include "gamma/scripting/lua/function.hpp"
+#include "gamma/scripting/lua/table.hpp"
 #include "lua.hpp"
 
 namespace y {
@@ -485,4 +485,4 @@ T* LuaEmplace(lua_State* L, Args&&... args) {
 }
 
 }  // namespace y
-#endif  // GAMMA_RUNTIME_LUA_STACK_HPP_
+#endif  // GAMMA_SCRIPTING_LUA_STACK_HPP_

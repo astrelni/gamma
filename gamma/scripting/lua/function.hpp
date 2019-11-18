@@ -16,13 +16,13 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef GAMMA_RUNTIME_LUA_FUNCTION_HPP_
-#define GAMMA_RUNTIME_LUA_FUNCTION_HPP_
+#ifndef GAMMA_SCRIPTING_LUA_FUNCTION_HPP_
+#define GAMMA_SCRIPTING_LUA_FUNCTION_HPP_
 
 #include "lua.hpp"
 
-#include "gamma/runtime/lua/reference.hpp"
-#include "gamma/runtime/lua/table.hpp"
+#include "gamma/scripting/lua/reference.hpp"
+#include "gamma/scripting/lua/table.hpp"
 
 namespace y {
 
@@ -39,4 +39,4 @@ class LuaFunction : public LuaReference {
 };
 
 }  // namespace y
-#endif  // GAMMA_RUNTIME_LUA_FUNCTION_HPP_
+#endif  // GAMMA_SCRIPTING_LUA_FUNCTION_HPP_

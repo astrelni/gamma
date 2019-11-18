@@ -16,13 +16,13 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef GAMMA_RUNTIME_LUA_RUN_HPP_
-#define GAMMA_RUNTIME_LUA_RUN_HPP_
+#ifndef GAMMA_SCRIPTING_LUA_RUN_HPP_
+#define GAMMA_SCRIPTING_LUA_RUN_HPP_
 
 #include <string>
 
 #include "gamma/common/log.hpp"
-#include "gamma/runtime/lua/call.hpp"
+#include "gamma/scripting/lua/call.hpp"
 #include "lua.hpp"
 
 namespace y {
@@ -73,4 +73,4 @@ inline void LuaRunSource(lua_State* L, const std::string& name,
 }
 
 }  // namespace y
-#endif  // GAMMA_RUNTIME_LUA_RUN_HPP_
+#endif  // GAMMA_SCRIPTING_LUA_RUN_HPP_

@@ -16,14 +16,14 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef GAMMA_RUNTIME_LUA_ACCESS_HPP_
-#define GAMMA_RUNTIME_LUA_ACCESS_HPP_
+#ifndef GAMMA_SCRIPTING_LUA_ACCESS_HPP_
+#define GAMMA_SCRIPTING_LUA_ACCESS_HPP_
 
 #include <type_traits>
 #include <utility>
 
 #include "absl/strings/string_view.h"
-#include "gamma/runtime/lua/stack.hpp"
+#include "gamma/scripting/lua/stack.hpp"
 #include "lua.hpp"
 
 namespace y {
@@ -116,4 +116,4 @@ T LuaRawGet(LuaTable* t, absl::string_view key) {
 }
 
 }  // namespace y
-#endif  // GAMMA_RUNTIME_LUA_ACCESS_HPP_
+#endif  // GAMMA_SCRIPTING_LUA_ACCESS_HPP_

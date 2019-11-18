@@ -16,8 +16,8 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef GAMMA_RUNTIME_LUA_TESTING_BASE_HPP_
-#define GAMMA_RUNTIME_LUA_TESTING_BASE_HPP_
+#ifndef GAMMA_SCRIPTING_LUA_TESTING_BASE_HPP_
+#define GAMMA_SCRIPTING_LUA_TESTING_BASE_HPP_
 
 #include "gtest/gtest.h"
 #include "lua.hpp"
@@ -38,4 +38,4 @@ class LuaTestBase : public ::testing::Test {
 
 }  // namespace y
 
-#endif  // GAMMA_RUNTIME_LUA_TESTING_BASE_HPP_
+#endif  // GAMMA_SCRIPTING_LUA_TESTING_BASE_HPP_

@@ -16,13 +16,13 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef GAMMA_RUNTIME_LUA_CALL_HPP_
-#define GAMMA_RUNTIME_LUA_CALL_HPP_
+#ifndef GAMMA_SCRIPTING_LUA_CALL_HPP_
+#define GAMMA_SCRIPTING_LUA_CALL_HPP_
 
 #include <utility>
 
 #include "gamma/common/log.hpp"
-#include "gamma/runtime/lua/stack.hpp"
+#include "gamma/scripting/lua/stack.hpp"
 #include "lua.hpp"
 
 namespace y {
@@ -50,4 +50,4 @@ R LuaPCall(lua_State* L, int nargs) {
 }
 
 }  // namespace y
-#endif  // GAMMA_RUNTIME_LUA_CALL_HPP_
+#endif  // GAMMA_SCRIPTING_LUA_CALL_HPP_

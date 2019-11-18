@@ -16,10 +16,10 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef GAMMA_RUNTIME_LUA_WRAPPER_HPP_
-#define GAMMA_RUNTIME_LUA_WRAPPER_HPP_
+#ifndef GAMMA_SCRIPTING_LUA_WRAPPER_HPP_
+#define GAMMA_SCRIPTING_LUA_WRAPPER_HPP_
 
-#include "gamma/runtime/lua/stack.hpp"
+#include "gamma/scripting/lua/stack.hpp"
 #include "lua.hpp"
 
 // Compile-time generate a lua_CFunction from a C++ function. The C++ function
@@ -461,4 +461,4 @@ GAMMA_LUA_R_CONST_MEMBER_FUNCTION(P1, P2, P3, P4, P5, P6, P7, P8);
 #undef GAMMA_LUA_FREE_ARG1
 
 }  // namespace y_internal
-#endif  // GAMMA_RUNTIME_LUA_WRAPPER_HPP_
+#endif  // GAMMA_SCRIPTING_LUA_WRAPPER_HPP_

@@ -16,17 +16,17 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef GAMMA_RUNTIME_LUA_EXPOSURE_HPP_
-#define GAMMA_RUNTIME_LUA_EXPOSURE_HPP_
+#ifndef GAMMA_SCRIPTING_LUA_EXPOSURE_HPP_
+#define GAMMA_SCRIPTING_LUA_EXPOSURE_HPP_
 
 #include <initializer_list>
 #include <string>
 #include <type_traits>
 
 #include "absl/strings/string_view.h"
-#include "engine/lua/access.hpp"
-#include "engine/lua/stack.hpp"
-#include "engine/lua/table.hpp"
+#include "gamma/scripting/lua/access.hpp"
+#include "gamma/scripting/lua/stack.hpp"
+#include "gamma/scripting/lua/table.hpp"
 #include "third_party/luajit/lua.hpp"
 
 namespace y {
@@ -107,4 +107,4 @@ void LuaExposeType(LuaTable* t, LuaExposureList nonstatic_methods,
 }
 
 }  // namespace y
-#endif  // GAMMA_RUNTIME_LUA_EXPOSURE_HPP_
+#endif  // GAMMA_SCRIPTING_LUA_EXPOSURE_HPP_

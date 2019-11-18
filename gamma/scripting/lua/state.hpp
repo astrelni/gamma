@@ -16,8 +16,8 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef GAMMA_RUNTIME_LUA_STATE_HPP_
-#define GAMMA_RUNTIME_LUA_STATE_HPP_
+#ifndef GAMMA_SCRIPTING_LUA_STATE_HPP_
+#define GAMMA_SCRIPTING_LUA_STATE_HPP_
 
 #include "lua.hpp"
 
@@ -72,4 +72,4 @@ inline void LuaState::clear() {
 }
 
 }  // namespace y
-#endif  // GAMMA_RUNTIME_LUA_HELPERS_STATE_HPP_
+#endif  // GAMMA_SCRIPTING_LUA_HELPERS_STATE_HPP_
