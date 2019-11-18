@@ -21,8 +21,8 @@
 
 #include <vector>
 
-#include "gamma/common/glfw.hpp"
 #include "gamma/graphics/vk/device.hpp"
+#include "gamma/graphics/vk/glfw.hpp"
 #include "gamma/graphics/vk/surface.hpp"
 
 namespace y {
