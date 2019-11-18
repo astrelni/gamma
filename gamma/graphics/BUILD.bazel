@@ -45,5 +45,6 @@ cc_library(
     ],
     deps = [
         ":window_settings_cc_proto",
+        "//gamma/graphics/vk",
     ],
 )
