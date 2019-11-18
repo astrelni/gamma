@@ -52,12 +52,3 @@ cc_library(
         "@shaderc//:shaderc",
     ],
 )
-
-cc_test(
-    name = "instance_test",
-    srcs = ["instance_test.cpp"],
-    deps = [
-        ":vk",
-        "@com_google_googletest//:gtest_main",
-    ],
-)
