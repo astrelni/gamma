@@ -19,8 +19,8 @@
 #ifndef GAMMA_GRAPHICS_VK_SURFACE_HPP_
 #define GAMMA_GRAPHICS_VK_SURFACE_HPP_
 
-#include "gamma/common/glfw.hpp"
 #include "gamma/common/log.hpp"
+#include "gamma/graphics/vk/glfw.hpp"
 #include "gamma/graphics/vk/instance.hpp"
 
 namespace y {
