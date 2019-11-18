@@ -27,14 +27,14 @@
 namespace y {
 
 void App::init(const AppSettings& settings) {
-  YERR_IF(window_ != nullptr) << "Application already initialized";
+  YERR_IF(window_.isOpen());
 
   YERR_IF(!settings.has_window_settings());
-  window_ = absl::make_unique<Window>(settings.window_settings());
+  window_.open(settings.window_settings());
 }
 
 void App::run() {
-  YERR_IF(window_ == nullptr) << "Applicaton has not been initialized";
+  YERR_IF(!window_.isOpen());
 
   Watch watch;
   while (!signal_close_) {

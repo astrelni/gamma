@@ -34,8 +34,8 @@ namespace y {
 // allows the calling of functions to be paused, slowed down, or sped up.
 //
 // This type is thread-safe. It is valid for a callback function to call
-// `callAfter()` or `callEvery()`, but not `update()`, on the `FunctionQueue`
-// object that stores it.
+// `setTimeout()`, but not `update()`, on the `FunctionQueue` object that stores
+// it.
 class FunctionQueue {
  public:
   // Register `f` to be called after at least `delay` time has passed as seen by

@@ -21,7 +21,7 @@ package(default_visibility = ["//visibility:public"])
 proto_library(
     name = "app_settings_proto",
     srcs = ["app_settings.proto"],
-    deps = [":window_settings_proto"],
+    deps = ["//gamma/graphics:window_settings_proto"],
 )
 
 cc_proto_library(
@@ -33,18 +33,15 @@ cc_library(
     name = "app",
     hdrs = [
         "app.hpp",
-        "window.hpp",
     ],
     srcs = [
         "app.cpp",
-        "window.cpp",
     ],
     deps = [
         ":app_settings_cc_proto",
-        "//gamma/common:glfw",
         "//gamma/common:function_queue",
         "//gamma/common:watch",
-        "//gamma/graphics/vk",
+        "//gamma/graphics",
         "@com_google_absl//absl/memory",
     ],
 )

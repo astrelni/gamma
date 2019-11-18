@@ -20,9 +20,8 @@
 #define GAMMA_APP_APP_HPP_
 
 #include "gamma/app/app_settings.pb.h"
-#include "gamma/app/window.hpp"
 #include "gamma/common/function_queue.hpp"
-#include "gamma/common/glfw.hpp"
+#include "gamma/graphics/window.hpp"
 
 namespace y {
 
@@ -40,12 +39,10 @@ class App {
 
   // void setEventCallback(Event event, Function f);
 
-  void callAfter(absl::Duration delay, Function<void()> f);
-  void callEvery(absl::Duration interval, Function<void()> f);
+  void setTimeout(Function<void()> f, absl::Duration delay);
 
  private:
-  GlfwState glfw_state_;
-  std::unique_ptr<Window> window_;
+  Window window_;
   bool signal_close_ = false;
   FunctionQueue function_queue_;
 };
@@ -53,12 +50,8 @@ class App {
 // -----------------------------------------------------------------------------
 //                      Implementation Details Follow
 
-inline void App::callAfter(absl::Duration delay, Function<void()> f) {
-  function_queue_.callAfter(delay, std::move(f));
-}
-
-inline void App::callEvery(absl::Duration interval, Function<void()> f) {
-  function_queue_.callEvery(interval, std::move(f));
+inline void App::setTimeout(Function<void()> f, absl::Duration delay) {
+  function_queue_.setTimeout(std::move(f), delay);
 }
 
 }  // namespace y
