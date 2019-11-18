@@ -19,7 +19,7 @@
 #ifndef GAMMA_ENGINE_GRAPHICS_VK_QUEUE_HPP_
 #define GAMMA_ENGINE_GRAPHICS_VK_QUEUE_HPP_
 
-#include "gamma/common/glfw.hpp"
+#include "gamma/graphics/vk/glfw.hpp"
 
 namespace y {
 
