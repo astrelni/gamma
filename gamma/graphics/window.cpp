@@ -27,18 +27,15 @@ GLFWwindow* MakeWindow(const WindowSettings& settings) {
   YERR_IF(!(settings.width() > 0 && settings.height() > 0))
       << "Only windowed mode currently supported, size required.";
 
-  glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);  // using Vulkan.
-  return glfwCreateWindow(settings.width(), settings.height(),
-                          settings.title().c_str(), nullptr, nullptr);
+  auto* window = glfwCreateWindow(settings.width(), settings.height(),
+                                  settings.title().c_str(), nullptr, nullptr);
+  YERR_IF(window == nullptr) << "Forgot to initialize graphics?";
+  return window;
 }
 
 }  // namespace
 
-void Window::open(const WindowSettings& settings) {
-  YERR_IF(glfw_window_ != nullptr) << "Window is already open.";
-
-  glfw_window_.reset(MakeWindow(settings));
-  // vulkan_context_.init(glfw_window_);
-}
+Window::Window(const WindowSettings& settings)
+    : glfw_window_(MakeWindow(settings)), vulkan_context_(glfw_window_.get()) {}
 
 }  // namespace y

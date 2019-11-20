@@ -29,19 +29,12 @@ namespace y {
 
 class Window {
  public:
-  void open(const WindowSettings& settings);
-
-  bool isOpen() const;
+  explicit Window(const WindowSettings& settings);
 
  private:
   std::unique_ptr<GLFWwindow, GLFWWindowReleaser> glfw_window_;
   VulkanContext vulkan_context_;
 };
-
-// -----------------------------------------------------------------------------
-//                      Implementation Details Follow
-
-inline bool Window::isOpen() const { return glfw_window_ != nullptr; }
 
 }  // namespace y
 #endif  // GAMMA_GRAPHICS_WINDOW_HPP_

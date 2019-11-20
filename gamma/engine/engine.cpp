@@ -25,17 +25,19 @@
 #include "gamma/common/watch.hpp"
 
 namespace y {
+namespace {
 
-void Engine::init(const EngineSettings& settings) {
-  YERR_IF(window_.isOpen());
-
+const WindowSettings& GetWindowSettings(const EngineSettings& settings) {
   YERR_IF(!settings.has_window_settings());
-  window_.open(settings.window_settings());
+  return settings.window_settings();
 }
 
-void Engine::run() {
-  YERR_IF(!window_.isOpen());
+}  // namespace
 
+Engine::Engine(const EngineSettings& settings)
+    : window_(GetWindowSettings(settings)), signal_close_(false) {}
+
+void Engine::run() {
   Watch watch;
   while (!signal_close_) {
     absl::Duration dt = watch.lap();

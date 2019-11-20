@@ -33,6 +33,7 @@ cc_library(
     hdrs = [
         "camera.hpp",
         "framebuffer.hpp",
+        "init.hpp",
         "material.hpp",
         "mesh.hpp",
         "pipeline.hpp",
@@ -41,6 +42,7 @@ cc_library(
         "window.hpp",
     ],
     srcs = [
+        "init.cpp",
         "window.cpp",
     ],
     deps = [

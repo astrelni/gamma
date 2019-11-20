@@ -19,12 +19,14 @@
 #ifndef GAMMA_GRAPHICS_VK_GLFW_HPP_
 #define GAMMA_GRAPHICS_VK_GLFW_HPP_
 
+// Make GLFW include Vulkan and not OpenGL headers:
+#define GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_VULKAN
 #include "GLFW/glfw3.h"
 
 namespace y {
 
-void GLFWSetErrorCallback();
+void GLFWInit();
 
 struct GLFWWindowReleaser {
   void operator()(GLFWwindow* window) {

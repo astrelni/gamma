@@ -16,42 +16,14 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef GAMMA_ENGINE_ENGINE_HPP_
-#define GAMMA_ENGINE_ENGINE_HPP_
-
-#include "gamma/common/function_queue.hpp"
-#include "gamma/engine/engine_settings.pb.h"
-#include "gamma/graphics/vk/glfw.hpp"
-#include "gamma/graphics/window.hpp"
+#ifndef GAMMA_ENGINE_INIT_HPP_
+#define GAMMA_ENGINE_INIT_HPP_
 
 namespace y {
 
-class Engine {
- public:
-  enum class Event {};
+void Initialize();
 
-  explicit Engine(const EngineSettings& settings);
-
-  void run();
-
-  void signalClose() { signal_close_ = true; }
-
-  // void setEventCallback(Event event, Function f);
-
-  void setTimeout(Function<void()> f, absl::Duration delay);
-
- private:
-  Window window_;
-  bool signal_close_;
-  FunctionQueue function_queue_;
-};
-
-// -----------------------------------------------------------------------------
-//                      Implementation Details Follow
-
-inline void Engine::setTimeout(Function<void()> f, absl::Duration delay) {
-  function_queue_.setTimeout(std::move(f), delay);
-}
+void ShutDown();
 
 }  // namespace y
-#endif  // GAMMA_ENGINE_ENGINE_HPP_
+#endif  // GAMMA_ENGINE_INIT_HPP_

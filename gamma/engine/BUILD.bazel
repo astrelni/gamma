@@ -33,9 +33,11 @@ cc_library(
     name = "engine",
     hdrs = [
         "engine.hpp",
+        "init.hpp",
     ],
     srcs = [
         "engine.cpp",
+        "init.cpp",
     ],
     deps = [
         ":engine_settings_cc_proto",

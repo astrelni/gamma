@@ -53,11 +53,17 @@ absl::string_view HumanReadableErrorCode(int code) {
 
 }  // namespace
 
-void GLFWSetErrorCallback() {
+void GLFWInit() {
+  YERR_IF(glfwInit() != GLFW_TRUE);
+
+  // Bubble glfw errors to logging:
   GLFWerrorfun callback = [](int code, const char* /* unused */) {
-    YERR << HumanReadableErrorCode(code);
+    YERR << "GLFW reported error code " << HumanReadableErrorCode(code);
   };
   (void)glfwSetErrorCallback(callback);
+
+  // Use Vulkan instead of OpenGL:
+  glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 }
 
 }  // namespace y
