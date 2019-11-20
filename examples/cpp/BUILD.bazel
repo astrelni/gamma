@@ -17,3 +17,13 @@
 # 3. This notice may not be removed or altered from any source distribution.
 
 package(default_visibility = ["//visibility:public"])
+
+cc_binary(
+    name = "hello_world",
+    srcs = ["hello_world.cpp"],
+    deps = [
+        "//gamma/engine",
+        "//gamma/engine:engine_settings_cc_proto",
+        "//gamma/graphics:window_settings_cc_proto",
+    ]
+)
