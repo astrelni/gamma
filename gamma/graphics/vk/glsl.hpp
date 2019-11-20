@@ -16,6 +16,9 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
+#ifndef GAMMA_GRAPHICS_VK_GLSL_HPP_
+#define GAMMA_GRAPHICS_VK_GLSL_HPP_
+
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -34,3 +37,4 @@ VulkanShaderModule MakeVulkanShaderFromGLSLFile(VkDevice logical_device,
                                                 const std::string& path);
 
 }  // namespace y
+#endif  // GAMMA_GRAPHICS_VK_GLSL_HPP_

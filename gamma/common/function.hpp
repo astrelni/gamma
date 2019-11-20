@@ -137,4 +137,4 @@ class Function<R(Args...)> {
 };
 
 }  // namespace y
-#endif  // GAMMA_COMMON_OBJECT_HPP_
+#endif  // GAMMA_COMMON_FUNCTION_HPP_

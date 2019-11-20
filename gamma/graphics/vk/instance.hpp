@@ -55,4 +55,4 @@ inline VulkanInstance::~VulkanInstance() {
 inline VkInstance VulkanInstance::handle() const { return instance_; }
 
 }  // namespace y
-#endif  // GAMMA_GRAPHICS_VK_STATE_HPP_
+#endif  // GAMMA_GRAPHICS_VK_INSTANCE_HPP_

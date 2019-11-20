@@ -55,4 +55,4 @@ inline void Engine::setTimeout(Function<void()> f, absl::Duration delay) {
 }
 
 }  // namespace y
-#endif  // GAMMA_APP_APP_HPP_
+#endif  // GAMMA_ENGINE_ENGINE_HPP_
