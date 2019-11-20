@@ -16,12 +16,43 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-syntax = "proto3";
+#ifndef GAMMA_ENGINE_ENGINE_HPP_
+#define GAMMA_ENGINE_ENGINE_HPP_
 
-import "gamma/graphics/window_settings.proto";
+#include "gamma/common/function_queue.hpp"
+#include "gamma/engine/engine_settings.pb.h"
+#include "gamma/graphics/window.hpp"
 
-package y;
+namespace y {
 
-message AppSettings {
-  WindowSettings window_settings = 1;
+class Engine {
+ public:
+  enum class Event {};
+
+  Engine() = default;
+
+  void init(const EngineSettings& settings);
+
+  void run();
+
+  void signalClose() { signal_close_ = true; }
+
+  // void setEventCallback(Event event, Function f);
+
+  void setTimeout(Function<void()> f, absl::Duration delay);
+
+ private:
+  Window window_;
+  bool signal_close_ = false;
+  FunctionQueue function_queue_;
+};
+
+// -----------------------------------------------------------------------------
+//                      Implementation Details Follow
+
+inline void Engine::setTimeout(Function<void()> f, absl::Duration delay) {
+  function_queue_.setTimeout(std::move(f), delay);
 }
+
+}  // namespace y
+#endif  // GAMMA_APP_APP_HPP_

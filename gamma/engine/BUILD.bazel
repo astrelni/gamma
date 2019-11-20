@@ -19,26 +19,26 @@
 package(default_visibility = ["//visibility:public"])
 
 proto_library(
-    name = "app_settings_proto",
-    srcs = ["app_settings.proto"],
+    name = "engine_settings_proto",
+    srcs = ["engine_settings.proto"],
     deps = ["//gamma/graphics:window_settings_proto"],
 )
 
 cc_proto_library(
-    name = "app_settings_cc_proto",
-    deps = [":app_settings_proto"],
+    name = "engine_settings_cc_proto",
+    deps = [":engine_settings_proto"],
 )
 
 cc_library(
-    name = "app",
+    name = "engine",
     hdrs = [
-        "app.hpp",
+        "engine.hpp",
     ],
     srcs = [
-        "app.cpp",
+        "engine.cpp",
     ],
     deps = [
-        ":app_settings_cc_proto",
+        ":engine_settings_cc_proto",
         "//gamma/common:function_queue",
         "//gamma/common:watch",
         "//gamma/graphics",

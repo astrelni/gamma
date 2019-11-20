@@ -16,7 +16,7 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "gamma/app/app.hpp"
+#include "gamma/engine/engine.hpp"
 
 #include "absl/memory/memory.h"
 #include "absl/time/clock.h"
@@ -26,14 +26,14 @@
 
 namespace y {
 
-void App::init(const AppSettings& settings) {
+void Engine::init(const EngineSettings& settings) {
   YERR_IF(window_.isOpen());
 
   YERR_IF(!settings.has_window_settings());
   window_.open(settings.window_settings());
 }
 
-void App::run() {
+void Engine::run() {
   YERR_IF(!window_.isOpen());
 
   Watch watch;
