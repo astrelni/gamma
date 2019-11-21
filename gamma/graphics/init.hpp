@@ -23,7 +23,5 @@ namespace y {
 
 void InitializeGraphics();
 
-void ShutDownGraphics();
-
 }  // namespace y
 #endif  // GAMMA_GRAPHICS_INIT_HPP_

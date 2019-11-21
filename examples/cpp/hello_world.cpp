@@ -34,11 +34,8 @@ int main() {
   window_settings->set_width(800);
   window_settings->set_height(600);
 
-  {
-    y::Engine engine(engine_settings);
-    std::cin.ignore();
-  }
+  y::Engine engine(engine_settings);
+  std::cin.ignore();
 
-  y::ShutDown();
   return 0;
 }

@@ -23,7 +23,5 @@ namespace y {
 
 void Initialize();
 
-void ShutDown();
-
 }  // namespace y
 #endif  // GAMMA_ENGINE_INIT_HPP_

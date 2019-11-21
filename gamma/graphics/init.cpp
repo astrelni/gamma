@@ -18,12 +18,15 @@
 
 #include "gamma/graphics/init.hpp"
 
+#include <cstdlib>
+
 #include "gamma/graphics/vk/glfw.hpp"
 
 namespace y {
 
-void InitializeGraphics() { GLFWInit(); }
-
-void ShutDownGraphics() { glfwTerminate(); }
+void InitializeGraphics() {
+  std::atexit([]() { glfwTerminate(); });
+  GLFWInit();
+}
 
 }  // namespace y

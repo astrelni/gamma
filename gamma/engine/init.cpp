@@ -24,6 +24,4 @@ namespace y {
 
 void Initialize() { InitializeGraphics(); }
 
-void ShutDown() { ShutDownGraphics(); }
-
 }  // namespace y
