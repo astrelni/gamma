@@ -32,7 +32,7 @@ class Engine {
 
   explicit Engine(const EngineSettings& settings);
 
-  void run();
+  void runMainLoop();
 
   void signalClose() { signal_close_ = true; }
 

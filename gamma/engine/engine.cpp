@@ -37,7 +37,7 @@ const WindowSettings& GetWindowSettings(const EngineSettings& settings) {
 Engine::Engine(const EngineSettings& settings)
     : window_(GetWindowSettings(settings)), signal_close_(false) {}
 
-void Engine::run() {
+void Engine::runMainLoop() {
   Watch watch;
   while (!signal_close_) {
     absl::Duration dt = watch.lap();
