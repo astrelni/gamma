@@ -35,15 +35,19 @@ const WindowSettings& GetWindowSettings(const EngineSettings& settings) {
 }  // namespace
 
 Engine::Engine(const EngineSettings& settings)
-    : window_(GetWindowSettings(settings)), signal_close_(false) {}
+    : window_(GetWindowSettings(settings)), should_exit_loop_(false) {}
 
 void Engine::runMainLoop() {
   Watch watch;
-  while (!signal_close_) {
+  while (!should_exit_loop_.load(std::memory_order_relaxed)) {
     absl::Duration dt = watch.lap();
     function_queue_.update(dt);
     absl::SleepFor(absl::Milliseconds(16));
   }
+}
+
+void Engine::signalLoopExit() {
+  should_exit_loop_.store(true, std::memory_order_relaxed);
 }
 
 }  // namespace y

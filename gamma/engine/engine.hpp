@@ -19,6 +19,8 @@
 #ifndef GAMMA_ENGINE_ENGINE_HPP_
 #define GAMMA_ENGINE_ENGINE_HPP_
 
+#include <atomic>
+
 #include "gamma/common/function_queue.hpp"
 #include "gamma/engine/engine_settings.pb.h"
 #include "gamma/graphics/vk/glfw.hpp"
@@ -34,7 +36,7 @@ class Engine {
 
   void runMainLoop();
 
-  void signalClose() { signal_close_ = true; }
+  void signalLoopExit();
 
   // void setEventCallback(Event event, Function f);
 
@@ -42,7 +44,7 @@ class Engine {
 
  private:
   Window window_;
-  bool signal_close_;
+  std::atomic<bool> should_exit_loop_;
   FunctionQueue function_queue_;
 };
 
