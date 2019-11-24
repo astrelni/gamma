@@ -79,6 +79,8 @@ VkExtent2D SelectExtent(const VkSurfaceCapabilitiesKHR& capabilities,
 }
 
 uint32_t SelectMinImageCount(const VkSurfaceCapabilitiesKHR& capabilities) {
+  YLOG << "min: " << capabilities.minImageCount
+       << ", max: " << capabilities.maxImageCount;
   uint32_t image_count = capabilities.minImageCount + 1;
   if (capabilities.maxImageCount != 0 &&
       image_count > capabilities.maxImageCount) {
@@ -154,6 +156,7 @@ VulkanSwapchain::VulkanSwapchain(const VulkanDevice& device,
 
   uint32_t image_count;
   vkGetSwapchainImagesKHR(logical_device_, swapchain_, &image_count, nullptr);
+  YLOG << "image count: " << image_count;
   images_.resize(image_count);
   vkGetSwapchainImagesKHR(logical_device_, swapchain_, &image_count,
                           images_.data());

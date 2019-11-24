@@ -21,6 +21,7 @@
 
 #include <vector>
 
+#include "absl/container/inlined_vector.h"
 #include "gamma/graphics/vk/device.hpp"
 #include "gamma/graphics/vk/glfw.hpp"
 #include "gamma/graphics/vk/surface.hpp"
@@ -37,8 +38,8 @@ class VulkanSwapchain {
   VkPhysicalDevice physical_device_ = VK_NULL_HANDLE;
   VkDevice logical_device_ = VK_NULL_HANDLE;
   VkSwapchainKHR swapchain_ = VK_NULL_HANDLE;
-  std::vector<VkImage> images_;
-  std::vector<VkImageView> image_views_;
+  absl::InlinedVector<VkImage, 3> images_;
+  absl::InlinedVector<VkImageView, 3> image_views_;
   VkFormat format_;
   VkExtent2D extent_;
 };
