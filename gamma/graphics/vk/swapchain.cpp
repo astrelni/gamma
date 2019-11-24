@@ -79,33 +79,12 @@ VkExtent2D SelectExtent(const VkSurfaceCapabilitiesKHR& capabilities,
 }
 
 uint32_t SelectMinImageCount(const VkSurfaceCapabilitiesKHR& capabilities) {
-  YLOG << "min: " << capabilities.minImageCount
-       << ", max: " << capabilities.maxImageCount;
   uint32_t image_count = capabilities.minImageCount + 1;
   if (capabilities.maxImageCount != 0 &&
       image_count > capabilities.maxImageCount) {
     return capabilities.maxImageCount;
   }
   return image_count;
-}
-
-std::vector<VkPresentModeKHR> GetPresentModes(VkPhysicalDevice physical_device,
-                                              VkSurfaceKHR surface) {
-  uint32_t n_present_modes;
-  vkGetPhysicalDeviceSurfacePresentModesKHR(physical_device, surface,
-                                            &n_present_modes, nullptr);
-  std::vector<VkPresentModeKHR> modes(n_present_modes);
-  vkGetPhysicalDeviceSurfacePresentModesKHR(physical_device, surface,
-                                            &n_present_modes, modes.data());
-  return modes;
-}
-
-VkPresentModeKHR SelectPresentMode(VkPhysicalDevice physical_device,
-                                   VkSurfaceKHR surface) {
-  for (VkPresentModeKHR mode : GetPresentModes(physical_device, surface)) {
-    if (mode == VK_PRESENT_MODE_MAILBOX_KHR) return mode;
-  }
-  return VK_PRESENT_MODE_FIFO_KHR;
 }
 
 }  // namespace
@@ -146,8 +125,7 @@ VulkanSwapchain::VulkanSwapchain(const VulkanDevice& device,
 
   create_info.preTransform = surface_capabilities.currentTransform;
   create_info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-  create_info.presentMode =
-      SelectPresentMode(physical_device_, surface.handle());
+  create_info.presentMode = VK_PRESENT_MODE_FIFO_KHR;
   create_info.clipped = VK_TRUE;
   create_info.oldSwapchain = VK_NULL_HANDLE;
 
@@ -156,7 +134,6 @@ VulkanSwapchain::VulkanSwapchain(const VulkanDevice& device,
 
   uint32_t image_count;
   vkGetSwapchainImagesKHR(logical_device_, swapchain_, &image_count, nullptr);
-  YLOG << "image count: " << image_count;
   images_.resize(image_count);
   vkGetSwapchainImagesKHR(logical_device_, swapchain_, &image_count,
                           images_.data());
