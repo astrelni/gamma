@@ -30,6 +30,7 @@ cc_library(
         "pipeline.hpp",
         "queue.hpp",
         "render_pass.hpp",
+        "semaphore.hpp",
         "shader_module.hpp",
         "surface.hpp",
         "swapchain.hpp",

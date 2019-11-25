@@ -24,6 +24,7 @@
 #include "absl/container/inlined_vector.h"
 #include "gamma/graphics/vk/device.hpp"
 #include "gamma/graphics/vk/glfw.hpp"
+#include "gamma/graphics/vk/semaphore.hpp"
 #include "gamma/graphics/vk/surface.hpp"
 
 namespace y {
