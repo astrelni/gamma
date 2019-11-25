@@ -18,6 +18,7 @@
 
 #include <iostream>
 
+#include "gamma/common/log.hpp"
 #include "gamma/engine/engine.hpp"
 #include "gamma/engine/engine_settings.pb.h"
 #include "gamma/engine/init.hpp"
@@ -35,7 +36,13 @@ int main() {
   window_settings->set_height(600);
 
   y::Engine engine(engine_settings);
-  std::cin.ignore();
-
+  engine.setTimeout(
+      [&engine]() {
+        YLOG << "signaling exit";
+        engine.signalLoopExit();
+      },
+      absl::Seconds(1));
+  YLOG << "running main loop for one second";
+  engine.runMainLoop();
   return 0;
 }
