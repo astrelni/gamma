@@ -45,6 +45,8 @@ class VulkanSwapchain {
   VkExtent2D extent_;
   VkRenderPass render_pass_;
   absl::InlinedVector<VkFramebuffer, 3> framebuffers_;
+  VulkanSemaphore image_ready_semaphore_;
+  VulkanSemaphore ready_to_present_semaphore_;
 };
 
 // -----------------------------------------------------------------------------

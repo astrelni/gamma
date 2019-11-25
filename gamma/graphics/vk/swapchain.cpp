@@ -93,7 +93,9 @@ VulkanSwapchain::VulkanSwapchain(const VulkanDevice& device,
                                  const VulkanSurface& surface,
                                  GLFWwindow* window)
     : physical_device_(device.physicalHandle()),
-      logical_device_(device.logicalHandle()) {
+      logical_device_(device.logicalHandle()),
+      image_ready_semaphore_(device),
+      ready_to_present_semaphore_(device) {
   VkSurfaceCapabilitiesKHR surface_capabilities;
   vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physical_device_, surface.handle(),
                                             &surface_capabilities);
