@@ -31,6 +31,8 @@ class Window {
  public:
   explicit Window(const WindowSettings& settings);
 
+  void display();
+
  private:
   std::unique_ptr<GLFWwindow, GLFWWindowReleaser> glfw_window_;
   VulkanContext vulkan_context_;

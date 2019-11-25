@@ -38,4 +38,6 @@ GLFWwindow* MakeWindow(const WindowSettings& settings) {
 Window::Window(const WindowSettings& settings)
     : glfw_window_(MakeWindow(settings)), vulkan_context_(glfw_window_.get()) {}
 
+void Window::display() {}
+
 }  // namespace y

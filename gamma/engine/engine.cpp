@@ -43,6 +43,7 @@ void Engine::runMainLoop() {
     absl::Duration dt = watch.lap();
     function_queue_.update(dt);
     absl::SleepFor(absl::Milliseconds(16));
+    window_.display();
   }
 }
 
