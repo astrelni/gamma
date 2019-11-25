@@ -42,12 +42,18 @@ class VulkanSwapchain {
   absl::InlinedVector<VkImageView, 3> image_views_;
   VkFormat format_;
   VkExtent2D extent_;
+  VkRenderPass render_pass_;
+  absl::InlinedVector<VkFramebuffer, 3> framebuffers_;
 };
 
 // -----------------------------------------------------------------------------
 //                      Implementation Details Follow
 
 inline VulkanSwapchain::~VulkanSwapchain() {
+  for (auto framebuffer : framebuffers_) {
+    vkDestroyFramebuffer(logical_device_, framebuffer, nullptr);
+  }
+  vkDestroyRenderPass(logical_device_, render_pass_, nullptr);
   for (auto view : image_views_) {
     vkDestroyImageView(logical_device_, view, nullptr);
   }
