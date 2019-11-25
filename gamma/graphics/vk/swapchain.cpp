@@ -72,6 +72,7 @@ VkExtent2D SelectExtent(const VkSurfaceCapabilitiesKHR& capabilities,
       std::numeric_limits<uint32_t>::max()) {
     return capabilities.currentExtent;
   }
+  int w, h;
   glfwGetFramebufferSize(window, &w, &h);
   return Saturate({static_cast<uint32_t>(w), static_cast<uint32_t>(h)},
                   capabilities.minImageExtent, capabilities.maxImageExtent);
