@@ -29,6 +29,7 @@ namespace y {
 class VulkanContext {
  public:
   explicit VulkanContext(GLFWwindow* window);
+  ~VulkanContext();
 
  private:
   VulkanInstance instance_;
@@ -44,6 +45,10 @@ inline VulkanContext::VulkanContext(GLFWwindow* window)
     : surface_(instance_, window),
       device_(instance_, surface_),
       swapchain_(device_, surface_, window) {}
+
+inline VulkanContext::~VulkanContext() {
+  vkDeviceWaitIdle(device_.logicalHandle());
+}
 
 }  // namespace y
 #endif  // GAMMA_GRAPHICS_VK_CONTEXT_HPP_
