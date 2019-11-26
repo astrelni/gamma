@@ -52,5 +52,7 @@ inline VulkanSemaphore::~VulkanSemaphore() {
   vkDestroySemaphore(logical_device_, semaphore_, nullptr);
 }
 
+inline VkSemaphore VulkanSemaphore::handle() const { return semaphore_; }
+
 }  // namespace y
 #endif  // GAMMA_GRAPHICS_VK_SEMAPHORE_HPP_
