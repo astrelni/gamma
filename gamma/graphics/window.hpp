@@ -29,7 +29,7 @@ namespace y {
 
 class Window {
  public:
-  static PollEvents();
+  static void PollEvents();
 
   explicit Window(const WindowSettings& settings);
 
