@@ -36,13 +36,6 @@ int main() {
   window_settings->set_height(600);
 
   y::Engine engine(engine_settings);
-  engine.setTimeout(
-      [&engine]() {
-        YLOG << "signaling exit";
-        engine.signalLoopExit();
-      },
-      absl::Seconds(1));
-  YLOG << "running main loop for one second";
   engine.runMainLoop();
   return 0;
 }

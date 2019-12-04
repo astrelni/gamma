@@ -29,7 +29,11 @@ namespace y {
 
 class Window {
  public:
+  static PollEvents();
+
   explicit Window(const WindowSettings& settings);
+
+  bool shouldClose() const;
 
   void display();
 
@@ -37,6 +41,15 @@ class Window {
   std::unique_ptr<GLFWwindow, GLFWWindowReleaser> glfw_window_;
   VulkanContext vulkan_context_;
 };
+
+// -----------------------------------------------------------------------------
+//                      Implementation Details Follow
+
+inline void Window::PollEvents() { glfwPollEvents(); }
+
+inline bool Window::shouldClose() const {
+  return glfwWindowShouldClose(glfw_window_.get());
+}
 
 }  // namespace y
 #endif  // GAMMA_GRAPHICS_WINDOW_HPP_

@@ -39,11 +39,13 @@ Engine::Engine(const EngineSettings& settings)
 
 void Engine::runMainLoop() {
   Watch watch;
-  while (!should_exit_loop_.load(std::memory_order_relaxed)) {
+  while (!should_exit_loop_.load(std::memory_order_relaxed) &&
+         !window_.shouldClose()) {
     absl::Duration dt = watch.lap();
     function_queue_.update(dt);
     absl::SleepFor(absl::Milliseconds(16));
     window_.display();
+    Window::PollEvents();
   }
 }
 
